@@ -1,381 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>YES SALES INC. — Inventory & Sales Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-* { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:'Segoe UI',sans-serif; background:#EEF2F7; color:#2C3E50; }
-
-.banner {
-  background:linear-gradient(135deg,#1A1A2E 0%,#16213E 100%);
-  color:#fff; padding:16px 28px;
-  display:flex; align-items:center; justify-content:space-between;
-}
-.banner-title { font-size:17px; font-weight:700; letter-spacing:.4px; }
-.banner-sub   { font-size:10px; color:#AED6F1; margin-top:3px; }
-.badge { background:#2471A3; color:#fff; border-radius:20px; padding:5px 14px; font-size:10px; font-weight:600; }
-
-.nav { display:flex; gap:4px; padding:14px 24px 0; }
-.nav-tab {
-  padding:8px 20px; border-radius:10px 10px 0 0;
-  font-size:12px; font-weight:600; cursor:pointer;
-  background:#D6DBE5; color:#5D6D7E; border:none; transition:all .2s;
-}
-.nav-tab.active { background:#fff; color:#1A1A2E; box-shadow:0 -2px 6px rgba(0,0,0,.07); }
-
-.panel { display:none; padding:0 24px 28px; background:#EEF2F7; }
-.panel.active { display:block; }
-
-.kpi-row { display:flex; gap:12px; padding:18px 0 4px; flex-wrap:wrap; }
-.kpi {
-  background:#fff; border-radius:10px; padding:14px 18px;
-  flex:1; min-width:140px; box-shadow:0 1px 4px rgba(0,0,0,.07);
-  border-left:4px solid #2471A3;
-}
-.kpi.orange { border-left-color:#F39C12; }
-.kpi.green  { border-left-color:#27AE60; }
-.kpi.red    { border-left-color:#E74C3C; }
-.kpi.purple { border-left-color:#8E44AD; }
-.kpi label  { font-size:9px; color:#7F8C8D; text-transform:uppercase; letter-spacing:.6px; }
-.kpi .val   { font-size:20px; font-weight:700; margin-top:3px; }
-.kpi .note  { font-size:9px; color:#95A5A6; margin-top:2px; }
-
-.card {
-  background:#fff; border-radius:12px;
-  margin-top:16px; padding:20px 22px;
-  box-shadow:0 1px 4px rgba(0,0,0,.07);
-}
-.card h2 {
-  font-size:13px; font-weight:700; color:#1A1A2E;
-  margin-bottom:14px; padding-bottom:8px;
-  border-bottom:2px solid #EBF5FB;
-}
-.chart-wrap { position:relative; height:340px; }
-.chart-wrap.tall { height:400px; }
-
-.leg { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:10px; font-size:11px; }
-.leg span { display:flex; align-items:center; gap:5px; }
-.ls { width:26px; height:3px; border-radius:2px; display:inline-block; }
-
-.tbl-controls { display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap; align-items:center; }
-.tbl-controls input {
-  padding:6px 12px; border:1px solid #D5D8DC; border-radius:20px;
-  font-size:11px; outline:none; width:200px;
-}
-.tbl-controls input:focus { border-color:#2471A3; }
-.filter-btns { display:flex; gap:6px; flex-wrap:wrap; }
-.fbtn {
-  padding:5px 14px; border-radius:20px; font-size:11px;
-  font-weight:600; cursor:pointer; border:1px solid #D5D8DC;
-  background:#fff; color:#7F8C8D; transition:all .15s;
-}
-.fbtn.active { background:#1B4F72; color:#fff; border-color:#1B4F72; }
-
-.tbl-wrap { max-height:440px; overflow-y:auto; border-radius:8px; border:1px solid #E8ECEF; }
-table { width:100%; border-collapse:collapse; font-size:11.5px; }
-thead th {
-  background:#1B4F72; color:#fff; padding:9px 10px;
-  text-align:center; font-weight:600;
-  position:sticky; top:0; z-index:1; cursor:pointer; user-select:none; white-space:nowrap;
-}
-thead th:hover { background:#154360; }
-thead th.sort-asc::after  { content:' ▲'; font-size:9px; }
-thead th.sort-desc::after { content:' ▼'; font-size:9px; }
-tbody tr:nth-child(even) { background:#F8FBFD; }
-tbody tr:hover { background:#EBF5FB; }
-tbody td { padding:6px 10px; text-align:right; }
-tbody td:first-child { text-align:center; font-weight:600; color:#1B4F72; }
-.pos { color:#27AE60; font-weight:600; }
-.neg { color:#E74C3C; font-weight:600; }
-.dim { color:#BDC3C7; }
-.ytw-row { background:#FDFEF0 !important; }
-.ytw-row:hover { background:#F5F6D0 !important; }
-.note-bar {
-  background:#FEF9E7; border-left:3px solid #F39C12;
-  border-radius:6px; padding:8px 14px; font-size:10px; color:#7D6608;
-  margin-top:10px;
-}
-
-footer { text-align:center; font-size:10px; color:#BDC3C7; padding:14px; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#EEF2F7;color:#2C3E50}
+.banner{background:linear-gradient(135deg,#1A1A2E,#16213E);color:#fff;padding:16px 28px;display:flex;align-items:center;justify-content:space-between}
+.banner-title{font-size:17px;font-weight:700}
+.banner-sub{font-size:10px;color:#AED6F1;margin-top:3px}
+.badge{background:#2471A3;color:#fff;border-radius:20px;padding:5px 14px;font-size:10px;font-weight:600}
+.nav{display:flex;gap:4px;padding:14px 24px 0}
+.nav-tab{padding:8px 20px;border-radius:10px 10px 0 0;font-size:12px;font-weight:600;cursor:pointer;background:#D6DBE5;color:#5D6D7E;border:none;transition:all .2s}
+.nav-tab.active{background:#fff;color:#1A1A2E;box-shadow:0 -2px 6px rgba(0,0,0,.07)}
+.panel{display:none;padding:0 24px 28px;background:#EEF2F7}.panel.active{display:block}
+.kpi-row{display:flex;gap:12px;padding:18px 0 4px;flex-wrap:wrap}
+.kpi{background:#fff;border-radius:10px;padding:14px 18px;flex:1;min-width:140px;box-shadow:0 1px 4px rgba(0,0,0,.07);border-left:4px solid #2471A3}
+.kpi.orange{border-left-color:#F39C12}.kpi.green{border-left-color:#27AE60}.kpi.red{border-left-color:#E74C3C}.kpi.purple{border-left-color:#8E44AD}
+.kpi label{font-size:9px;color:#7F8C8D;text-transform:uppercase;letter-spacing:.6px}
+.kpi .val{font-size:20px;font-weight:700;margin-top:3px}.kpi .note{font-size:9px;color:#95A5A6;margin-top:2px}
+.card{background:#fff;border-radius:12px;margin-top:16px;padding:20px 22px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.card h2{font-size:13px;font-weight:700;color:#1A1A2E;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #EBF5FB}
+.chart-wrap{position:relative;height:340px}.chart-wrap.tall{height:400px}
+.leg{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:11px}
+.leg span{display:flex;align-items:center;gap:5px}.ls{width:26px;height:3px;border-radius:2px;display:inline-block}
+.tbl-controls{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.tbl-controls input{padding:6px 12px;border:1px solid #D5D8DC;border-radius:20px;font-size:11px;outline:none;width:200px}
+.tbl-controls input:focus{border-color:#2471A3}
+.filter-btns{display:flex;gap:6px;flex-wrap:wrap}
+.fbtn{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #D5D8DC;background:#fff;color:#7F8C8D;transition:all .15s}
+.fbtn.active{background:#1B4F72;color:#fff;border-color:#1B4F72}
+.tbl-wrap{max-height:440px;overflow-y:auto;border-radius:8px;border:1px solid #E8ECEF}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead th{background:#1B4F72;color:#fff;padding:9px 10px;text-align:center;font-weight:600;position:sticky;top:0;z-index:1;cursor:pointer;user-select:none;white-space:nowrap}
+thead th:hover{background:#154360}
+thead th.sort-asc::after{content:' ▲';font-size:9px}thead th.sort-desc::after{content:' ▼';font-size:9px}
+tbody tr:nth-child(even){background:#F8FBFD}tbody tr:hover{background:#EBF5FB}
+tbody td{padding:6px 10px;text-align:right}tbody td:first-child{text-align:center;font-weight:600;color:#1B4F72}
+.pos{color:#27AE60;font-weight:600}.neg{color:#E74C3C;font-weight:600}.dim{color:#BDC3C7}
+.ytw-row{background:#FDFEF0!important}.ytw-row:hover{background:#F5F6D0!important}
+footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </style>
 </head>
 <body>
-
 <div class="banner">
   <div>
     <div class="banner-title">YES SALES INC. &nbsp;|&nbsp; Inventory &amp; Sales Dashboard</div>
-    <div class="banner-sub">2025 Full Year (WK01–52) &nbsp;vs&nbsp; 2026 YTW (WK01–WK18) &nbsp;·&nbsp; Qty only &nbsp;·&nbsp; MW_OHW010002 / MW_OHW020002 excluded</div>
+    <div class="banner-sub">2025 Full Year (WK01–52) &nbsp;vs&nbsp; 2026 YTW (WK01–WK18) &nbsp;·&nbsp; Qty only &nbsp;·&nbsp; MW_OHW010002/020002 excluded</div>
   </div>
   <div class="badge">04/27/2026</div>
 </div>
-
 <div class="nav">
   <button class="nav-tab active" onclick="showPanel('summary',this)">📊 Summary</button>
   <button class="nav-tab" onclick="showPanel('combo',this)">📈 Sales &amp; Inventory</button>
   <button class="nav-tab" onclick="showPanel('yoy',this)">🔁 YoY Comparison</button>
   <button class="nav-tab" onclick="showPanel('table',this)">📋 Weekly Table</button>
 </div>
-
-<!-- ══ PANEL 1: Summary ══ -->
 <div id="panel-summary" class="panel active">
   <div class="kpi-row">
-    <div class="kpi orange">
-      <label>2023 Annual Sales</label>
-      <div class="val">4.73M</div>
-      <div class="note">4,731,110 units</div>
-    </div>
-    <div class="kpi orange">
-      <label>2024 Annual Sales</label>
-      <div class="val">6.77M</div>
-      <div class="note">6,770,735 units &nbsp;|&nbsp; YoY +43.1%</div>
-    </div>
-    <div class="kpi">
-      <label>2025 Full Year Sales</label>
-      <div class="val">8.20M</div>
-      <div class="note">8,195,274 units (WK01–52)</div>
-    </div>
-    <div class="kpi green">
-      <label>2026 YTW (WK01–18)</label>
-      <div class="val">5.98M</div>
-      <div class="note">5,984,001 units</div>
-    </div>
-    <div class="kpi red">
-      <label>2025 WK52 Inventory</label>
-      <div class="val">4.93M</div>
-      <div class="note">4,926,896 units</div>
-    </div>
-    <div class="kpi purple">
-      <label>2026 WK18 Inventory (est.)</label>
-      <div class="val">5.19M</div>
-      <div class="note">5,192,379 units</div>
-    </div>
+    <div class="kpi orange"><label>2023 Annual Sales</label><div class="val">4.73M</div><div class="note">4,731,110 units</div></div>
+    <div class="kpi orange"><label>2024 Annual Sales</label><div class="val">6.77M</div><div class="note">6,770,735 units &nbsp;|&nbsp; YoY +43.1%</div></div>
+    <div class="kpi"><label>2025 Full Year Sales</label><div class="val">8.20M</div><div class="note">8,195,274 units (WK01–52)</div></div>
+    <div class="kpi green"><label>2026 YTW (WK01–18)</label><div class="val">5.98M</div><div class="note">5,984,001 units</div></div>
+    <div class="kpi red"><label>2025 WK52 Inventory</label><div class="val">4.93M</div><div class="note">4,926,896 units</div></div>
+    <div class="kpi purple"><label>2026 WK18 Inventory (est.)</label><div class="val">5.19M</div><div class="note">5,192,379 units</div></div>
   </div>
-  <div class="card">
-    <h2>📅 Annual Sales Summary (2023–2026)</h2>
-    <div class="chart-wrap" style="height:260px;">
-      <canvas id="annualChart"></canvas>
-    </div>
-    <div class="note-bar">※ 2026 is YTW (WK01–18) only &nbsp;·&nbsp; MW_OHW010002 / MW_OHW020002 excluded from all years</div>
-  </div>
+  <div class="card"><h2>📅 Annual Sales Summary (2023–2026)</h2><div class="chart-wrap" style="height:260px"><canvas id="annualChart"></canvas></div></div>
 </div>
-
-<!-- ══ PANEL 2: Combo ══ -->
 <div id="panel-combo" class="panel">
-  <div class="card" style="margin-top:16px;">
-    <h2>📈 Weekly Sales &amp; Inventory Trend — 2025 vs 2026</h2>
+  <div class="card" style="margin-top:16px">
+    <h2>📈 Weekly Sales &amp; Inventory Trend</h2>
     <div class="leg">
       <span><span class="ls" style="background:#F39C12"></span>2025 Sales</span>
-      <span><span class="ls" style="background:#1A5276"></span>2026 Sales (YTW)</span>
-      <span><span class="ls" style="background:#E74C3C"></span>2025 Inventory (right axis)</span>
-      <span><span class="ls" style="background:#27AE60"></span>2026 Inventory (right axis)</span>
+      <span><span class="ls" style="background:#1A5276"></span>2026 Sales</span>
+      <span><span class="ls" style="background:#E74C3C"></span>2025 Inventory (right)</span>
+      <span><span class="ls" style="background:#27AE60"></span>2026 Inventory (right)</span>
     </div>
     <div class="chart-wrap tall"><canvas id="comboChart"></canvas></div>
   </div>
 </div>
-
-<!-- ══ PANEL 3: YoY ══ -->
 <div id="panel-yoy" class="panel">
-  <div class="card" style="margin-top:16px;">
-    <h2>🔁 2025 vs 2026 Weekly Sales — YoY Comparison</h2>
-    <div class="leg">
-      <span><span class="ls" style="background:#F39C12"></span>2025 Sales</span>
-      <span><span class="ls" style="background:#1A5276"></span>2026 Sales (WK01–18)</span>
-    </div>
+  <div class="card" style="margin-top:16px">
+    <h2>🔁 2025 vs 2026 Weekly Sales</h2>
+    <div class="leg"><span><span class="ls" style="background:#F39C12"></span>2025</span><span><span class="ls" style="background:#1A5276"></span>2026 YTW</span></div>
     <div class="chart-wrap tall"><canvas id="yoyChart"></canvas></div>
   </div>
-  <div class="card">
-    <h2>📊 YoY % Change by Week (WK01–18)</h2>
-    <div class="chart-wrap" style="height:220px;"><canvas id="yoyBarChart"></canvas></div>
-  </div>
+  <div class="card"><h2>📊 YoY % Change by Week</h2><div class="chart-wrap" style="height:220px"><canvas id="yoyBarChart"></canvas></div></div>
 </div>
-
-<!-- ══ PANEL 4: Table ══ -->
 <div id="panel-table" class="panel">
-  <div class="card" style="margin-top:16px;">
+  <div class="card" style="margin-top:16px">
     <h2>📋 Weekly Detail Table</h2>
     <div class="tbl-controls">
-      <input type="text" id="searchBox" placeholder="🔍  Search week (e.g. WK15)..." oninput="filterTable()">
+      <input type="text" id="searchBox" placeholder="🔍 Search week..." oninput="filterTable()">
       <div class="filter-btns">
         <button class="fbtn active" onclick="setFilter('all',this)">All 52 Weeks</button>
-        <button class="fbtn" onclick="setFilter('ytw',this)">2026 YTW only</button>
-        <button class="fbtn" onclick="setFilter('pos',this)">YoY ↑ Positive</button>
-        <button class="fbtn" onclick="setFilter('neg',this)">YoY ↓ Negative</button>
+        <button class="fbtn" onclick="setFilter('ytw',this)">2026 YTW</button>
+        <button class="fbtn" onclick="setFilter('pos',this)">YoY ↑</button>
+        <button class="fbtn" onclick="setFilter('neg',this)">YoY ↓</button>
       </div>
     </div>
-    <div class="tbl-wrap">
-      <table id="dataTable">
-        <thead><tr>
-          <th onclick="sortTable(0)">Week</th>
-          <th onclick="sortTable(1)">2025 Sales</th>
-          <th onclick="sortTable(2)">2026 Sales</th>
-          <th onclick="sortTable(3)">YoY %</th>
-          <th onclick="sortTable(4)">2025 Inventory</th>
-          <th onclick="sortTable(5)">2026 Inventory</th>
-        </tr></thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
+    <div class="tbl-wrap"><table id="dataTable">
+      <thead><tr>
+        <th onclick="sortTable(0)">Week</th><th onclick="sortTable(1)">2025 Sales</th>
+        <th onclick="sortTable(2)">2026 Sales</th><th onclick="sortTable(3)">YoY %</th>
+        <th onclick="sortTable(4)">2025 Inventory</th><th onclick="sortTable(5)">2026 Inventory</th>
+      </tr></thead>
+      <tbody id="tableBody"></tbody>
+    </table></div>
   </div>
 </div>
-
-<footer>YES SALES INC. Confidential &nbsp;·&nbsp; Inv Sales Report W3 &nbsp;·&nbsp; Generated 04/27/2026 &nbsp;·&nbsp; MW_OHW010002 / MW_OHW020002 excluded</footer>
-
+<footer>YES SALES INC. Confidential &nbsp;·&nbsp; Updated 04/27/2026 &nbsp;·&nbsp; MW_OHW010002/020002 excluded</footer>
 <script>
-const LABELS = ["WK01", "WK02", "WK03", "WK04", "WK05", "WK06", "WK07", "WK08", "WK09", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33", "WK34", "WK35", "WK36", "WK37", "WK38", "WK39", "WK40", "WK41", "WK42", "WK43", "WK44", "WK45", "WK46", "WK47", "WK48", "WK49", "WK50", "WK51", "WK52"];
-const S25    = [109450, 178711, 30908, 171159, 454031, 171062, 81252, 83754, 92398, 133402, 94167, 31221, 252206, 218432, 101038, 60428, 120441, 169152, 62552, 75194, 81547, 293875, 111615, 159847, 238269, 92335, 124422, 112097, 186365, 693214, 126356, 184738, 72447, 303593, 253349, 148989, 131036, 242227, 168745, 39341, 53590, 70949, 417788, 94156, 106542, 51977, 236348, 168204, 54257, 98588, 159283, 228227];
-const S26R   = [46633, 120717, 1109055, 629433, 74861, 272309, 457101, 143394, 143238, 232341, 122754, 671569, 525945, 317921, 190771, 96705, 812658, 16596, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"];
-const I25    = [4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4459093, 4438628, 4750188, 4766581, 4926896];
-const I26R   = [4888376, 5838005, 5382326, 5273194, 5541933, 5569004, 5306915, 5352809, 5946816, 6102223, 6427633, 5841312, 5478783, 5400214, 5326527, 5822480, 5168943, 5192379, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"];
-const YOYR   = [-57.4, -32.5, 3488.2, 267.7, -83.5, 59.2, 462.6, 71.2, 55.0, 74.2, 30.4, 2051.0, 108.5, 45.5, 88.8, 60.0, 574.7, -90.2, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"];
-const LAST_WK = 18;
-const ANNUAL  = {"2023":4731110,"2024":6770735,"2025":8195274,"2026 YTW":5984001};
-
-const S26  = S26R.map(v => v==="null"?null:v);
-const I26  = I26R.map(v => v==="null"?null:v);
-const YOYP = YOYR.map(v => v==="null"?null:v);
-
-function showPanel(id, el) {
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
-  el.classList.add('active');
-  if (id==='combo' && !window._ci) { initCombo();  window._ci=true; }
-  if (id==='yoy'   && !window._yi) { initYoY();    window._yi=true; }
-  if (id==='table' && !window._ti) { buildTable(); window._ti=true; }
-}
-
-// Annual bar
-(function(){
-  const ctx=document.getElementById('annualChart').getContext('2d');
-  new Chart(ctx,{
-    type:'bar',
-    data:{labels:Object.keys(ANNUAL),datasets:[{
-      label:'Sales Qty',data:Object.values(ANNUAL),
-      backgroundColor:['#F39C12','#E67E22','#2471A3','#27AE60'],
-      borderRadius:6,borderSkipped:false
-    }]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>' '+c.parsed.y.toLocaleString()+' units'}}
-      },
-      scales:{
-        y:{ticks:{callback:v=>(v/1e6).toFixed(1)+'M',font:{size:10}},grid:{color:'#F0F4F8'}},
-        x:{grid:{display:false}}
-      }
-    }
-  });
-})();
-
-// Combo
-function initCombo(){
-  const ctx=document.getElementById('comboChart').getContext('2d');
-  new Chart(ctx,{
-    data:{labels:LABELS,datasets:[
-      {type:'line',label:'2025 Sales',data:S25,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.05)',borderWidth:2,pointRadius:2,yAxisID:'y',tension:.3,fill:true},
-      {type:'line',label:'2026 Sales (YTW)',data:S26,borderColor:'#1A5276',backgroundColor:'rgba(26,82,118,.05)',borderWidth:2.5,pointRadius:2,yAxisID:'y',tension:.3,fill:true,spanGaps:false},
-      {type:'line',label:'2025 Inventory',data:I25,borderColor:'#E74C3C',backgroundColor:'transparent',borderWidth:2,pointRadius:1,yAxisID:'y2',tension:.2,borderDash:[5,3]},
-      {type:'line',label:'2026 Inventory (YTW)',data:I26,borderColor:'#27AE60',backgroundColor:'transparent',borderWidth:2,pointRadius:1,yAxisID:'y2',tension:.2,borderDash:[5,3],spanGaps:false}
-    ]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},
-        tooltip:{callbacks:{label:c=>c.parsed.y!=null?' '+c.dataset.label+': '+c.parsed.y.toLocaleString():null}}
-      },
-      scales:{
-        x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},
-        y:{position:'left',title:{display:true,text:'Sales Qty',font:{size:10}},
-           ticks:{callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v,font:{size:9}},grid:{color:'#E8ECEF'}},
-        y2:{position:'right',title:{display:true,text:'Inventory',font:{size:10}},
-            ticks:{callback:v=>(v/1e6).toFixed(1)+'M',font:{size:9}},grid:{drawOnChartArea:false}}
-      }
-    }
-  });
-}
-
-// YoY
-function initYoY(){
-  const ctx1=document.getElementById('yoyChart').getContext('2d');
-  new Chart(ctx1,{
-    type:'line',
-    data:{labels:LABELS,datasets:[
-      {label:'2025 Sales',data:S25,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.05)',borderWidth:2,pointRadius:2,tension:.3,fill:true},
-      {label:'2026 Sales (YTW)',data:S26,borderColor:'#1A5276',backgroundColor:'rgba(26,82,118,.05)',borderWidth:2.5,pointRadius:2,tension:.3,fill:true,spanGaps:false}
-    ]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},
-        tooltip:{callbacks:{label:c=>c.parsed.y!=null?' '+c.dataset.label+': '+c.parsed.y.toLocaleString():null}}
-      },
-      scales:{
-        x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},
-        y:{ticks:{callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v,font:{size:9}},grid:{color:'#E8ECEF'}}
-      }
-    }
-  });
-  const ctx2=document.getElementById('yoyBarChart').getContext('2d');
-  const yoyColors=YOYP.slice(0,LAST_WK).map(v=>v===null?'#BDC3C7':v>=0?'#27AE60':'#E74C3C');
-  new Chart(ctx2,{
-    type:'bar',
-    data:{labels:LABELS.slice(0,LAST_WK),datasets:[{
-      label:'YoY % Change',data:YOYP.slice(0,LAST_WK),
-      backgroundColor:yoyColors,borderRadius:3,borderSkipped:false
-    }]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>c.parsed.y!=null?(c.parsed.y>=0?' +':' ')+c.parsed.y+'%':' —'}}
-      },
-      scales:{
-        x:{ticks:{font:{size:9}},grid:{display:false}},
-        y:{ticks:{callback:v=>v+'%',font:{size:9}},grid:{color:'#F0F4F8'},
-           title:{display:true,text:'YoY %',font:{size:9}}}
-      }
-    }
-  });
-}
-
-// Table
-let curFilter='all', curSearch='', sortCol=0, sortDir=1;
-const rawRows=LABELS.map((lbl,i)=>({
-  wk:lbl,wkNum:i+1,s25:S25[i],s26:S26[i],yoy:YOYP[i],i25:I25[i],i26:I26[i],isYTW:i<LAST_WK
-}));
-
-function buildTable(){
-  let rows=[...rawRows];
-  if(curFilter==='ytw') rows=rows.filter(r=>r.isYTW);
-  if(curFilter==='pos') rows=rows.filter(r=>r.yoy!==null&&r.yoy>=0);
-  if(curFilter==='neg') rows=rows.filter(r=>r.yoy!==null&&r.yoy<0);
-  if(curSearch) rows=rows.filter(r=>r.wk.toLowerCase().includes(curSearch.toLowerCase()));
-  rows.sort((a,b)=>{
-    const k=['wkNum','s25','s26','yoy','i25','i26'][sortCol];
-    return sortDir*((a[k]??-Infinity)-(b[k]??-Infinity));
-  });
-  document.getElementById('tableBody').innerHTML=rows.map(r=>{
-    const s26s=r.s26!==null?r.s26.toLocaleString():'<span class="dim">—</span>';
-    const i26s=r.i26!==null?r.i26.toLocaleString():'<span class="dim">—</span>';
-    const ys=r.yoy!==null?`<span class="${r.yoy>=0?'pos':'neg'}">${r.yoy>=0?'+':''}${r.yoy}%</span>`:'<span class="dim">—</span>';
-    return `<tr class="${r.isYTW?'ytw-row':''}">
-      <td>${r.wk}</td><td>${r.s25.toLocaleString()}</td><td>${s26s}</td>
-      <td>${ys}</td><td>${r.i25.toLocaleString()}</td><td>${i26s}</td></tr>`;
-  }).join('');
-}
-
-function filterTable(){ curSearch=document.getElementById('searchBox').value; buildTable(); }
-function setFilter(f,el){ curFilter=f; document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); buildTable(); }
-function sortTable(col){
-  const ths=document.querySelectorAll('#dataTable thead th');
-  ths.forEach(th=>th.classList.remove('sort-asc','sort-desc'));
-  sortDir=(sortCol===col)?sortDir*-1:1; sortCol=col;
-  ths[col].classList.add(sortDir===1?'sort-asc':'sort-desc'); buildTable();
-}
+const LABELS=["WK01", "WK02", "WK03", "WK04", "WK05", "WK06", "WK07", "WK08", "WK09", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33", "WK34", "WK35", "WK36", "WK37", "WK38", "WK39", "WK40", "WK41", "WK42", "WK43", "WK44", "WK45", "WK46", "WK47", "WK48", "WK49", "WK50", "WK51", "WK52"],S25=[109450, 178711, 30908, 171159, 454031, 171062, 81252, 83754, 92398, 133402, 94167, 31221, 252206, 218432, 101038, 60428, 120441, 169152, 62552, 75194, 81547, 293875, 111615, 159847, 238269, 92335, 124422, 112097, 186365, 693214, 126356, 184738, 72447, 303593, 253349, 148989, 131036, 242227, 168745, 39341, 53590, 70949, 417788, 94156, 106542, 51977, 236348, 168204, 54257, 98588, 159283, 228227],S26R=[46633, 120717, 1109055, 629433, 74861, 272309, 457101, 143394, 143238, 232341, 122754, 671569, 525945, 317921, 190771, 96705, 812658, 16596, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"],I25=[4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4369997, 4459093, 4438628, 4750188, 4766581, 4926896],I26R=[4888376, 5838005, 5382326, 5273194, 5541933, 5569004, 5306915, 5352809, 5946816, 6102223, 6427633, 5841312, 5478783, 5400214, 5326527, 5822480, 5168943, 5192379, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"],YOYR=[-57.4, -32.5, 3488.2, 267.7, -83.5, 59.2, 462.6, 71.2, 55.0, 74.2, 30.4, 2051.0, 108.5, 45.5, 88.8, 60.0, 574.7, -90.2, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"],LAST_WK=18;
+const ANNUAL={"2023":4731110,"2024":6770735,"2025":8195274,"2026 YTW":5984001};
+const S26=S26R.map(v=>v==="null"?null:v),I26=I26R.map(v=>v==="null"?null:v),YOYP=YOYR.map(v=>v==="null"?null:v);
+function showPanel(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');el.classList.add('active');if(id==='combo'&&!window._ci){initCombo();window._ci=true}if(id==='yoy'&&!window._yi){initYoY();window._yi=true}if(id==='table'&&!window._ti){buildTable();window._ti=true}}
+(function(){const ctx=document.getElementById('annualChart').getContext('2d');new Chart(ctx,{type:'bar',data:{labels:Object.keys(ANNUAL),datasets:[{label:'Sales',data:Object.values(ANNUAL),backgroundColor:['#F39C12','#E67E22','#2471A3','#27AE60'],borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.parsed.y.toLocaleString()+' units'}}},scales:{y:{ticks:{callback:v=>(v/1e6).toFixed(1)+'M',font:{size:10}},grid:{color:'#F0F4F8'}},x:{grid:{display:false}}}}})})();
+function initCombo(){const ctx=document.getElementById('comboChart').getContext('2d');new Chart(ctx,{data:{labels:LABELS,datasets:[{type:'line',label:'2025 Sales',data:S25,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.05)',borderWidth:2,pointRadius:2,yAxisID:'y',tension:.3,fill:true},{type:'line',label:'2026 Sales',data:S26,borderColor:'#1A5276',backgroundColor:'rgba(26,82,118,.05)',borderWidth:2.5,pointRadius:2,yAxisID:'y',tension:.3,fill:true,spanGaps:false},{type:'line',label:'2025 Inventory',data:I25,borderColor:'#E74C3C',backgroundColor:'transparent',borderWidth:2,pointRadius:1,yAxisID:'y2',tension:.2,borderDash:[5,3]},{type:'line',label:'2026 Inventory',data:I26,borderColor:'#27AE60',backgroundColor:'transparent',borderWidth:2,pointRadius:1,yAxisID:'y2',tension:.2,borderDash:[5,3],spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},tooltip:{callbacks:{label:c=>c.parsed.y!=null?' '+c.dataset.label+': '+c.parsed.y.toLocaleString():null}}},scales:{x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},y:{position:'left',title:{display:true,text:'Sales Qty',font:{size:10}},ticks:{callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v,font:{size:9}},grid:{color:'#E8ECEF'}},y2:{position:'right',title:{display:true,text:'Inventory',font:{size:10}},ticks:{callback:v=>(v/1e6).toFixed(1)+'M',font:{size:9}},grid:{drawOnChartArea:false}}}}}}
+function initYoY(){const ctx1=document.getElementById('yoyChart').getContext('2d');new Chart(ctx1,{type:'line',data:{labels:LABELS,datasets:[{label:'2025',data:S25,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.05)',borderWidth:2,pointRadius:2,tension:.3,fill:true},{label:'2026 YTW',data:S26,borderColor:'#1A5276',backgroundColor:'rgba(26,82,118,.05)',borderWidth:2.5,pointRadius:2,tension:.3,fill:true,spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},tooltip:{callbacks:{label:c=>c.parsed.y!=null?' '+c.dataset.label+': '+c.parsed.y.toLocaleString():null}}},scales:{x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},y:{ticks:{callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v,font:{size:9}},grid:{color:'#E8ECEF'}}}}});const ctx2=document.getElementById('yoyBarChart').getContext('2d');const yoyColors=YOYP.slice(0,LAST_WK).map(v=>v===null?'#BDC3C7':v>=0?'#27AE60':'#E74C3C');new Chart(ctx2,{type:'bar',data:{labels:LABELS.slice(0,LAST_WK),datasets:[{label:'YoY %',data:YOYP.slice(0,LAST_WK),backgroundColor:yoyColors,borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y!=null?(c.parsed.y>=0?' +':' ')+c.parsed.y+'%':' —'}}},scales:{x:{ticks:{font:{size:9}},grid:{display:false}},y:{ticks:{callback:v=>v+'%',font:{size:9}},grid:{color:'#F0F4F8'},title:{display:true,text:'YoY %',font:{size:9}}}}}}}
+let curFilter='all',curSearch='',sortCol=0,sortDir=1;
+const rawRows=LABELS.map((lbl,i)=>({wk:lbl,wkNum:i+1,s25:S25[i],s26:S26[i],yoy:YOYP[i],i25:I25[i],i26:I26[i],isYTW:i<LAST_WK}));
+function buildTable(){let rows=[...rawRows];if(curFilter==='ytw')rows=rows.filter(r=>r.isYTW);if(curFilter==='pos')rows=rows.filter(r=>r.yoy!==null&&r.yoy>=0);if(curFilter==='neg')rows=rows.filter(r=>r.yoy!==null&&r.yoy<0);if(curSearch)rows=rows.filter(r=>r.wk.toLowerCase().includes(curSearch.toLowerCase()));rows.sort((a,b)=>{const k=['wkNum','s25','s26','yoy','i25','i26'][sortCol];return sortDir*((a[k]??-Infinity)-(b[k]??-Infinity))});document.getElementById('tableBody').innerHTML=rows.map(r=>{const s26s=r.s26!==null?r.s26.toLocaleString():'<span class="dim">—</span>';const i26s=r.i26!==null?r.i26.toLocaleString():'<span class="dim">—</span>';const ys=r.yoy!==null?`<span class="${r.yoy>=0?'pos':'neg'}">${r.yoy>=0?'+':''}${r.yoy}%</span>`:'<span class="dim">—</span>';return `<tr class="${r.isYTW?'ytw-row':''}"><td>${r.wk}</td><td>${r.s25.toLocaleString()}</td><td>${s26s}</td><td>${ys}</td><td>${r.i25.toLocaleString()}</td><td>${i26s}</td></tr>`}).join('')}
+function filterTable(){curSearch=document.getElementById('searchBox').value;buildTable()}
+function setFilter(f,el){curFilter=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));el.classList.add('active');buildTable()}
+function sortTable(col){const ths=document.querySelectorAll('#dataTable thead th');ths.forEach(th=>th.classList.remove('sort-asc','sort-desc'));sortDir=(sortCol===col)?sortDir*-1:1;sortCol=col;ths[col].classList.add(sortDir===1?'sort-asc':'sort-desc');buildTable()}
 </script>
-</body>
-</html>
+</body></html>
