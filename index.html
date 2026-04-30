@@ -54,29 +54,34 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
       onfocus="this.style.borderColor='#2471A3'" onblur="this.style.borderColor='#D5D8DC'"
       onkeydown="if(event.key==='Enter')checkPwd()">
     <div id="pwErr" style="font-size:11px;color:#E74C3C;height:16px;margin-bottom:8px"></div>
-    <button onclick="checkPwd()"
+    <button id="pwBtn"
       style="width:100%;padding:11px;background:#1A1A2E;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px">
       ENTER
     </button>
   </div>
 </div>
 <script>
-var _PWD="1103";
-if(!_PWD){document.getElementById('pwOverlay').style.display='none';}
-function checkPwd(){
-  var v=document.getElementById('pwInput').value;
-  if(v===_PWD){
-    document.getElementById('pwOverlay').style.display='none';
-  }else{
-    var err=document.getElementById('pwErr');
-    var inp=document.getElementById('pwInput');
-    err.textContent='Wrong password. Try again.';
-    inp.style.borderColor='#E74C3C';
-    inp.value='';
-    inp.focus();
-    setTimeout(function(){err.textContent='';inp.style.borderColor='#D5D8DC';},2500);
+(function(){
+  var PWD="1103";
+  var overlay=document.getElementById('pwOverlay');
+  var input=document.getElementById('pwInput');
+  var err=document.getElementById('pwErr');
+  var btn=document.getElementById('pwBtn');
+  if(!PWD){overlay.style.display='none';return;}
+  function tryLogin(){
+    if(input.value===PWD){
+      overlay.style.display='none';
+    }else{
+      err.textContent='Wrong password. Try again.';
+      input.style.borderColor='#E74C3C';
+      input.value='';
+      input.focus();
+      setTimeout(function(){err.textContent='';input.style.borderColor='#D5D8DC';},2000);
+    }
   }
-}
+  btn.addEventListener('click',tryLogin);
+  input.addEventListener('keydown',function(e){if(e.key==='Enter')tryLogin();});
+})();
 </script>
 <div class="banner">
   <div>
