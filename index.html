@@ -61,25 +61,20 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
   </div>
 </div>
 <script>
-const _PWD="1103";
-(function(){
-  if(_PWD===null){document.getElementById('pwOverlay').style.display='none';return;}
-  const saved=sessionStorage.getItem('ysdash_auth');
-  if(saved===_PWD){document.getElementById('pwOverlay').style.display='none';return;}
-  document.getElementById('pwOverlay').style.display='flex';
-})();
+var _PWD="1103";
+if(!_PWD){document.getElementById('pwOverlay').style.display='none';}
 function checkPwd(){
-  const v=document.getElementById('pwInput').value;
+  var v=document.getElementById('pwInput').value;
   if(v===_PWD){
-    sessionStorage.setItem('ysdash_auth',v);
     document.getElementById('pwOverlay').style.display='none';
   }else{
-    const err=document.getElementById('pwErr');
-    err.textContent='Wrong password. Please try again.';
-    const inp=document.getElementById('pwInput');
+    var err=document.getElementById('pwErr');
+    var inp=document.getElementById('pwInput');
+    err.textContent='Wrong password. Try again.';
     inp.style.borderColor='#E74C3C';
-    inp.value='';inp.focus();
-    setTimeout(()=>{err.textContent='';inp.style.borderColor='#D5D8DC';},2500);
+    inp.value='';
+    inp.focus();
+    setTimeout(function(){err.textContent='';inp.style.borderColor='#D5D8DC';},2500);
   }
 }
 </script>
