@@ -44,27 +44,6 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </style>
 </head>
 <body>
-<script>
-(function(){
-  var p="1103";
-  if(!p)return;
-  var ok=false;
-  for(var i=0;i<3;i++){
-    var a=window.prompt('YES SALES INC.
-Inventory & Sales Dashboard
-
-Enter password:');
-    if(a===null){break;}
-    if(a===p){ok=true;break;}
-    if(i<2)window.alert('Wrong password. Try again. ('+(2-i)+' attempt(s) left)');
-  }
-  if(!ok){
-    document.open();
-    document.write('<html><body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;font-family:Segoe UI,sans-serif;background:#1A1A2E;color:#fff"><div style="text-align:center"><div style="font-size:56px;margin-bottom:16px">&#128274;</div><h2>Access Denied</h2><p style="margin-top:8px;opacity:.6">Please contact your team lead.</p></div></body></html>');
-    document.close();
-  }
-})();
-</script>
 <div class="banner">
   <div>
     <div class="banner-title">YES SALES INC. &nbsp;|&nbsp; Inventory &amp; Sales Dashboard</div>
