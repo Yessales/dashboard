@@ -718,11 +718,32 @@ function renderDetail(){
       const bayTotal=Object.values(byBay[b]).reduce((a,v)=>a+v,0);
       const barW=maxQty>0?Math.round((bayTotal/maxQty)*60):0;
       const barCol=bayTotal>0?qColor(bayTotal):'#1a1a38';
+
+      // Collect all items across all shelves in this bay
+      const bayItems={};
+      Object.keys(byBay[b]).forEach(sh=>{
+        const locKey=`${areaId}-${aisleId}-${String(b).padStart(2,'0')}-${sh}`;
+        const items=(LOC_ITEMS[curWH]||{})[locKey]||[];
+        items.forEach(it=>{
+          if(!bayItems[it.s]) bayItems[it.s]={n:it.n, q:0};
+          bayItems[it.s].q+=it.q;
+        });
+      });
+      const bayItemsHtml=Object.entries(bayItems).map(([sku,d])=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:1px 6px 1px 12px;border-bottom:1px solid #080f1c">
+          <div>
+            <span style="color:#5590cc;font-family:monospace;font-size:8.5px">${sku}</span>
+            <div style="color:#3a4f6a;font-size:7.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">${d.n}</div>
+          </div>
+          <span style="color:#70c090;font-size:8.5px;font-weight:700;margin-left:4px">${d.q.toLocaleString()}</span>
+        </div>`).join('');
+
       rows+=`<div class="dl-row">
         <span class="dl-loc">${areaId}-${aisleId}-${String(b).padStart(2,'0')}</span>
         <span class="dl-qty ${bayTotal===0?'zero':''}">${bayTotal>0?bayTotal.toLocaleString():'-'}</span>
       </div>
-      ${bayTotal>0?`<div class="dl-bar" style="width:${barW}px;background:${barCol};margin:0 3px 2px"></div>`:''}`;
+      ${bayItemsHtml}
+      ${bayTotal>0?`<div class="dl-bar" style="width:${barW}px;background:${barCol};margin:0 3px 3px"></div>`:''}`;
     });
   } else {
     // Shelf detail view
