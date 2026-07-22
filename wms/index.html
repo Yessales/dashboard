@@ -79,7 +79,6 @@ canvas{display:block}
 #pw-btn:hover{background:#1e2a4a}
 #pw-err{color:#e05050;font-size:11px;margin-top:8px;height:14px}
 
-#tpl-wrap{position:absolute;top:0;left:0;right:0;bottom:0;overflow:auto;padding:16px;display:none}
 .tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:4px}
 .pallet-cell{border-radius:4px;padding:4px 2px;text-align:center;cursor:pointer;border:1px solid rgba(255,255,255,0.1);transition:all .15s;font-size:8.5px;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .pallet-cell:hover{border-color:#50e090;transform:scale(1.05);z-index:2}
@@ -91,11 +90,11 @@ canvas{display:block}
 #tpl-title{color:#7ab3ff;font-size:13px;font-weight:700}
 #tpl-stats{font-size:10px;color:#5577aa}
 
-#tpl-wrap{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;padding:12px 16px;display:none;display:none}
+#tpl-wrap{flex:1;overflow:hidden;padding:12px 16px;display:none;flex-direction:column}
 #tpl-header{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;flex-shrink:0}
 #tpl-title{color:#7ab3ff;font-size:13px;font-weight:700}
 #tpl-stats{font-size:10px;color:#5577aa}
-#tpl-body{display:flex;gap:10px;height:calc(100% - 40px);overflow:hidden}
+#tpl-body{display:flex;gap:10px;flex:1;overflow:hidden;min-height:0}
 #tpl-groups-col{width:160px;flex-shrink:0;overflow-y:auto}
 .tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding-right:4px}
 .group-cell{border-radius:6px;padding:8px 6px;text-align:center;cursor:pointer;border:1.5px solid;transition:all .15s}
@@ -168,23 +167,23 @@ document.addEventListener('DOMContentLoaded',()=>{
   <div id="canvas-wrap">
     <canvas id="c"></canvas>
     <div id="tip"></div>
-    <div id="tpl-wrap">
-  <div id="tpl-header">
-    <span id="tpl-title">3PL Warehouse — Pallet Map</span>
-    <span id="tpl-stats"></span>
-  </div>
-  <div id="tpl-body">
-    <div id="tpl-groups-col">
-      <div class="tpl-grid" id="tpl-grid"></div>
-    </div>
-    <div id="tpl-pallet-panel"></div>
-  </div>
-</div>
     <div id="controls">🖱 Drag: Pan &nbsp;|&nbsp; Scroll: Zoom &nbsp;|&nbsp; Hover: Details</div>
     <div id="zoom-btns">
       <div class="zbtn" onclick="zoom(1.2)">+</div>
       <div class="zbtn" onclick="zoom(0.8)">−</div>
       <div class="zbtn" onclick="resetView()">⌂</div>
+    </div>
+  </div>
+  <div id="tpl-wrap" style="display:none">
+    <div id="tpl-header">
+      <span id="tpl-title">3PL Warehouse — Pallet Map</span>
+      <span id="tpl-stats"></span>
+    </div>
+    <div id="tpl-body">
+      <div id="tpl-groups-col">
+        <div class="tpl-grid" id="tpl-grid"></div>
+      </div>
+      <div id="tpl-pallet-panel"></div>
     </div>
   </div>
   <div id="sidebar">
@@ -1095,13 +1094,15 @@ function switchWH(wh){
   const tplWrap = document.getElementById('tpl-wrap');
   const cvWrap  = document.getElementById('canvas-wrap');
   if(wh==='3PL'){
-    tplWrap.style.display='block';
+    tplWrap.style.display='flex';
     cv.style.display='none';
+    cvWrap.style.display='none';
     document.getElementById('zoom-btns').style.display='none';
     document.getElementById('controls').style.display='none';
     draw3PL();
   } else {
     tplWrap.style.display='none';
+    cvWrap.style.display='block';
     cv.style.display='block';
     document.getElementById('zoom-btns').style.display='flex';
     document.getElementById('controls').style.display='block';
