@@ -1049,7 +1049,8 @@ function focusLoc(loc){
 function switchWH(wh){
   curWH=wh;
   const tplWrap=document.getElementById('tpl-wrap');
-  const cvWrap=document.getElementById('canvas-wrap');
+  const cvWrap =document.getElementById('canvas-wrap');
+
   if(wh==='3PL'){
     tplWrap.style.display='flex';
     cvWrap.style.display='none';
@@ -1058,49 +1059,45 @@ function switchWH(wh){
     document.getElementById('sku-input').value='';
     document.getElementById('sku-results').innerHTML='';
     document.getElementById('sku-detail').style.display='none';
-    // Hide inventory summary for 3PL
     document.querySelectorAll('.sidebar-stat').forEach(el=>el.style.display='none');
     selGroup=-1;
     draw3PL();
     return;
-  } else {
-    // Show inventory summary for PICO/BOYLE
-    document.querySelectorAll('.sidebar-stat').forEach(el=>el.style.display='');
   }
-    tplWrap.style.display='none';
-    cvWrap.style.display='block';
-    document.getElementById('zoom-btns').style.display='flex';
-    document.getElementById('controls').style.display='block';
-  }
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&wh==='PICO')||(i===1&&wh==='BOYLE')));
+
+  // PICO / BOYLE
+  tplWrap.style.display='none';
+  cvWrap.style.display='block';
+  document.getElementById('zoom-btns').style.display='flex';
+  document.getElementById('controls').style.display='block';
+  document.querySelectorAll('.sidebar-stat').forEach(el=>el.style.display='');
+
+  document.querySelectorAll('.tab').forEach((t,i)=>
+    t.classList.toggle('active',(i===0&&wh==='PICO')||(i===1&&wh==='BOYLE')||(i===2&&wh==='3PL')));
+
   selectedAisle=null; skuHighlights=[];
-  document.getElementById("sku-input").value="";
-  document.getElementById("sku-results").innerHTML="";
-  document.getElementById("sku-detail").style.display="none";
+  document.getElementById('sku-input').value='';
+  document.getElementById('sku-results').innerHTML='';
+  document.getElementById('sku-detail').style.display='none';
   document.getElementById('detail-title').textContent='Selected';
   document.getElementById('sb-sel').style.display='block';
   document.getElementById('sb-sel').innerHTML='<span style="color:#445566;font-style:italic">Click an aisle to see details</span>';
   document.getElementById('detail-list').style.display='none';
+
   const d=INV[wh];
   document.getElementById('ib-name').textContent=wh;
-  if(wh==='3PL'){
-    document.getElementById('ib-lt').textContent=TPL_TOTAL.toLocaleString();
-    document.getElementById('ib-dt').textContent='0';
-    document.getElementById('ib-gt').textContent=TPL_TOTAL.toLocaleString();
-  } else {
-    document.getElementById('ib-lt').textContent=d.LT.toLocaleString();
-    document.getElementById('ib-dt').textContent=d.D.toLocaleString();
-    document.getElementById('ib-gt').textContent=d.GT.toLocaleString();
-    document.getElementById('sb-lt').textContent=d.LT.toLocaleString();
-    document.getElementById('sb-dt').textContent=d.D.toLocaleString();
-    document.getElementById('sb-gt').textContent=d.GT.toLocaleString();
-  }
-  if(wh!=='3PL'){
-    document.getElementById('sb-sel').innerHTML='<span style="color:#445566;font-style:italic">Hover over a rack</span>';
-    sc=1;ox=0;oy=0;
-    draw();
-  }
+  document.getElementById('ib-lt').textContent=d.LT.toLocaleString();
+  document.getElementById('ib-dt').textContent=d.D.toLocaleString();
+  document.getElementById('ib-gt').textContent=d.GT.toLocaleString();
+  document.getElementById('sb-lt').textContent=d.LT.toLocaleString();
+  document.getElementById('sb-dt').textContent=d.D.toLocaleString();
+  document.getElementById('sb-gt').textContent=d.GT.toLocaleString();
+
+  sc=1; ox=0; oy=0;
+  build(wh);
+  draw();
 }
+
 
 window.addEventListener('resize',resize);
 if(sessionStorage.getItem('wms_auth')==='1'){
