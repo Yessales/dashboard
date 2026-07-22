@@ -1079,14 +1079,17 @@ function switchWH(wh){
     document.getElementById('ib-gt').textContent=TPL_TOTAL.toLocaleString();
   } else {
     document.getElementById('ib-lt').textContent=d.LT.toLocaleString();
-  document.getElementById('ib-dt').textContent=d.D.toLocaleString();
-  document.getElementById('ib-gt').textContent=d.GT.toLocaleString();
-  document.getElementById('sb-lt').textContent=d.LT.toLocaleString();
-  document.getElementById('sb-dt').textContent=d.D.toLocaleString();
-  document.getElementById('sb-gt').textContent=d.GT.toLocaleString();
-  document.getElementById('sb-sel').innerHTML='<span style="color:#445566;font-style:italic">Hover over a rack</span>';
-  sc=1;ox=0;oy=0;
-  draw();
+    document.getElementById('ib-dt').textContent=d.D.toLocaleString();
+    document.getElementById('ib-gt').textContent=d.GT.toLocaleString();
+    document.getElementById('sb-lt').textContent=d.LT.toLocaleString();
+    document.getElementById('sb-dt').textContent=d.D.toLocaleString();
+    document.getElementById('sb-gt').textContent=d.GT.toLocaleString();
+  }
+  if(wh!=='3PL'){
+    document.getElementById('sb-sel').innerHTML='<span style="color:#445566;font-style:italic">Hover over a rack</span>';
+    sc=1;ox=0;oy=0;
+    draw();
+  }
 }
 
 window.addEventListener('resize',resize);
