@@ -110,6 +110,7 @@ function checkPW(){
   if(v==='1103'){
     document.getElementById('pw-overlay').style.display='none';
     sessionStorage.setItem('wms_auth','1');
+    setTimeout(()=>{resize();switchWH('PICO');},50);
   } else {
     document.getElementById('pw-err').textContent='Incorrect password';
     document.getElementById('pw-input').value='';
@@ -120,6 +121,7 @@ if(sessionStorage.getItem('wms_auth')==='1'){
   document.addEventListener('DOMContentLoaded',()=>{
     const o=document.getElementById('pw-overlay');
     if(o) o.style.display='none';
+    setTimeout(()=>{if(typeof resize==='function'){resize();switchWH('PICO');}},100);
   });
 }
 document.addEventListener('DOMContentLoaded',()=>{
@@ -1088,7 +1090,16 @@ function switchWH(wh){
 }
 
 window.addEventListener('resize',resize);
-resize();
+// Only auto-resize if already authenticated (no overlay blocking)
+if(sessionStorage.getItem('wms_auth')==='1'){
+  resize();
+} else {
+  // Will be called by checkPW() after auth
+  // But set canvas size anyway for layout
+  setTimeout(()=>{
+    if(document.getElementById('pw-overlay').style.display==='none') resize();
+  },200);
+}
 </script>
 </body>
 </html>
