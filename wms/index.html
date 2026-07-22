@@ -838,32 +838,28 @@ function renderDetail(){
   // Special zones don't have bay breakdown
   const m=h.label.match(/^([PB][12])-([A-Z]+)$/);
   if(!m || h.special){
-    // For split labels like 'P2-G (upper)', also check base key 'P2-G'
-    const baseLabel = h.label.replace(/ \(upper\)| \(lower\)/g, '');
-    const zoneItems=(LOC_ITEMS[curWH]||{})[h.label]
-      || (LOC_ITEMS[curWH]||{})[baseLabel]
-      || [];
     if(h.isDefault){
-      const wh=h.label.split('-')[0];
-      const defItems=DEF_ITEMS[wh]||{};
+      const wh2=h.label.split('-')[0];
+      const defItems=DEF_ITEMS[wh2]||{};
       const sorted=Object.entries(defItems).sort((a,b)=>b[1].q-a[1].q);
-      const maxQ=sorted.length>0?sorted[0][1].q:1;
-      const total=sorted.reduce((s,[,v])=>s+v.q,0);
+      const maxQ2=sorted.length>0?sorted[0][1].q:1;
+      const total2=sorted.reduce((s,[,v])=>s+v.q,0);
       document.getElementById('detail-title').textContent='Default Location';
       list.style.display='block';
       document.getElementById('sb-sel').style.display='none';
-      list.innerHTML=`<div class="dl-summary">${sorted.length} SKUs | <b style="color:#ffcc44">${total.toLocaleString()} ea</b></div>`+
-        sorted.map(([sku,d])=>{const bw=Math.round((d.q/maxQ)*55);
+      list.innerHTML=`<div class="dl-summary">${sorted.length} SKUs | <b style="color:#ffcc44">${total2.toLocaleString()} ea</b></div>`+
+        sorted.map(([sku,d])=>{const bw=Math.round((d.q/maxQ2)*55);
           return `<div class="dl-row"><div><span class="dl-loc" style="font-size:8.5px">${sku}</span>
             <div style="color:#3a4f6a;font-size:7.5px;overflow:hidden;text-overflow:ellipsis;max-width:140px">${d.n}</div></div>
             <span class="dl-qty">${d.q.toLocaleString()}</span></div>
             <div class="dl-bar" style="width:${bw}px;background:#7a5500;margin:0 4px 3px"></div>`;}).join('');
       return;
     }
-    const zoneItems=(LOC_ITEMS[curWH]||{})[h.label]||[];
-    const maxQ=zoneItems.length>0?Math.max(...zoneItems.map(i=>i.q)):1;
+    const baseLabel=h.label.replace(/ \(upper\)| \(lower\)/g,'');
+    const zoneItems=(LOC_ITEMS[curWH]||{})[h.label]||(LOC_ITEMS[curWH]||{})[baseLabel]||[];
+    const maxQz=zoneItems.length>0?Math.max(...zoneItems.map(i=>i.q)):1;
     const itemsHtml=zoneItems.length>0
-      ? zoneItems.map(it=>{const bw=Math.round((it.q/maxQ)*55);
+      ? zoneItems.map(it=>{const bw=Math.round((it.q/maxQz)*55);
           return `<div class="dl-row"><div><span class="dl-loc" style="font-size:8.5px">${it.s}</span>
             <div style="color:#3a4f6a;font-size:7.5px;overflow:hidden;text-overflow:ellipsis;max-width:140px">${it.n}</div></div>
             <span class="dl-qty">${it.q.toLocaleString()}</span></div>
