@@ -235,7 +235,7 @@ function select3PLSKU(sku){
     const bw=Math.round((p.q/maxQ)*55);
     const pnum=p.p.replace('#','');
     return `<div class="dl-row" onclick="selectPallet3PL(${pnum})" style="cursor:pointer">
-      <span class="dl-loc">Box: ${p.p}</span><span class="dl-qty">${p.q.toLocaleString()}</span></div>
+      <span class="dl-loc">${p.p}</span><span class="dl-qty">${p.q.toLocaleString()}</span></div>
       <div class="dl-bar" style="width:${bw}px;background:#1a6ab0;margin:0 4px 3px"></div>`;
   }).join('');
   document.getElementById('detail-title').textContent=sku;
@@ -589,7 +589,7 @@ function drawPICO(inv){
   ctx.strokeRect(X(0),Y(PH-4),S(PW),S(3.5));
   ctx.fillStyle='#cc9933';ctx.font=`bold ${S(1.7)}px Segoe UI`;
   ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillText('Box: Default Location',X(1),Y(PH-2.3));
+  ctx.fillText('Default Location',X(1),Y(PH-2.3));
   ctx.fillStyle='#ffcc44';ctx.textAlign='right';
   ctx.fillText(pDefQty>0?pDefQty.toLocaleString()+' ea':'',X(PW-1),Y(PH-2.3));
   hitBoxes.push({x:X(0),y:Y(PH-4),w:S(PW),h:S(3.5),label:'PICO-DEFAULT',qty:pDefQty,special:true,info:'Default Location (unlocated)',isDefault:true});
@@ -708,7 +708,7 @@ function drawBOYLE(inv){
   ctx.strokeRect(X(0),Y(PH-4),S(PW),S(3.5));
   ctx.fillStyle='#cc9933';ctx.font=`bold ${S(1.7)}px Segoe UI`;
   ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillText('Box: Default Location',X(1),Y(PH-2.3));
+  ctx.fillText('Default Location',X(1),Y(PH-2.3));
   ctx.fillStyle='#ffcc44';ctx.textAlign='right';
   ctx.fillText(bDefQty>0?bDefQty.toLocaleString()+' ea':'',X(PW-1),Y(PH-2.3));
   hitBoxes.push({x:X(0),y:Y(PH-4),w:S(PW),h:S(3.5),label:'BOYLE-DEFAULT',qty:bDefQty,special:true,info:'Default Location (unlocated)',isDefault:true});
@@ -1032,7 +1032,7 @@ function selectSKU(code){
   } else {
     locsHtml = '<div style="color:#445566;font-size:9px;padding:3px">No located inventory</div>';
   }
-  const defHtml = d.d > 0 ? `<div class="sd-def">Box: Default: ${d.d.toLocaleString()} ea</div>` : '';
+  const defHtml = d.d > 0 ? `<div class="sd-def">Default: ${d.d.toLocaleString()} ea</div>` : '';
   det.innerHTML = `<div class="sd-title">${code}</div><div style="color:#556688;font-size:8.5px;margin-bottom:4px">${d.n}</div><div style="color:#5577aa;font-size:8.5px;margin-bottom:4px">Located: <b style="color:#50e090">${locTotal.toLocaleString()}</b> ea in <b style="color:#88b4ee">${d.l.length}</b> loc(s)</div>${locsHtml}${defHtml}`;
   det.style.display = 'block';
   draw();
