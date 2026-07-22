@@ -1027,12 +1027,12 @@ function selectSKU(code){
   if(d.l.length > 0){
     [...d.l].sort((a,b)=>a.loc.localeCompare(b.loc)).forEach(x=>{
       const bw = Math.round((x.qty/maxQ)*55);
-      locsHtml += `<div class="sd-loc-row" onclick="focusLoc('${x.loc}')"><span class="sd-lcode">ð ${x.loc}</span><span class="sd-lqty">${x.qty.toLocaleString()}</span></div><div class="sd-bar" style="width:${bw}px;background:${qColor(x.qty)}"></div>`;
+      locsHtml += `<div class="sd-loc-row" onclick="focusLoc('${x.loc}')"><span class="sd-lcode">Loc: ${x.loc}</span><span class="sd-lqty">${x.qty.toLocaleString()}</span></div><div class="sd-bar" style="width:${bw}px;background:${qColor(x.qty)}"></div>`;
     });
   } else {
     locsHtml = '<div style="color:#445566;font-size:9px;padding:3px">No located inventory</div>';
   }
-  const defHtml = d.d > 0 ? `<div class="sd-def">ð¦ Default: ${d.d.toLocaleString()} ea</div>` : '';
+  const defHtml = d.d > 0 ? `<div class="sd-def">Box: Default: ${d.d.toLocaleString()} ea</div>` : '';
   det.innerHTML = `<div class="sd-title">${code}</div><div style="color:#556688;font-size:8.5px;margin-bottom:4px">${d.n}</div><div style="color:#5577aa;font-size:8.5px;margin-bottom:4px">Located: <b style="color:#50e090">${locTotal.toLocaleString()}</b> ea in <b style="color:#88b4ee">${d.l.length}</b> loc(s)</div>${locsHtml}${defHtml}`;
   det.style.display = 'block';
   draw();
