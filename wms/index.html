@@ -289,7 +289,7 @@ function select3PLSKU(sku){
   </div>
   <div id="sidebar">
     <div style="padding:7px 10px;border-bottom:1px solid #0f1828">
-      <input id="sku-input" type="text" placeholder="🔍 Search SKU or item name..." oninput="searchSKU(this.value)" autocomplete="off" style="width:100%;background:#0d1a35;border:1px solid #1e3060;color:#a0c8ff;border-radius:4px;padding:5px 8px;font-size:10.5px;outline:none;box-sizing:border-box">
+      <input id="sku-input" type="text" placeholder="🔍 Search SKU or item name..." oninput="searchSKU(this.value)" onpaste="setTimeout(()=>{const el=document.getElementById('sku-input');el.selectionStart=el.selectionEnd=el.value.length;searchSKU(el.value);},0)" autocomplete="off" style="width:100%;background:#0d1a35;border:1px solid #1e3060;color:#a0c8ff;border-radius:4px;padding:5px 8px;font-size:10.5px;outline:none;box-sizing:border-box">
       <div id="sku-results" style="max-height:110px;overflow-y:auto;margin-top:4px;font-size:9.5px"></div>
     </div>
     
