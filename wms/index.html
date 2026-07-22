@@ -1090,12 +1090,9 @@ function switchWH(wh){
 }
 
 window.addEventListener('resize',resize);
-// Only auto-resize if already authenticated (no overlay blocking)
 if(sessionStorage.getItem('wms_auth')==='1'){
   resize();
 } else {
-  // Will be called by checkPW() after auth
-  // But set canvas size anyway for layout
   setTimeout(()=>{
     if(document.getElementById('pw-overlay').style.display==='none') resize();
   },200);
