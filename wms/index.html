@@ -197,21 +197,21 @@ function selectPallet3PL(pnum){
   const items=TPL_PALLETS[String(pnum)]||[];
   const totalQty=items.reduce((s,i)=>s+i.q,0);
   const maxQ=items.length>0?Math.max(...items.map(i=>i.q)):1;
-  const locsHtml=items.map(it=>{
+  const rowsHtml=items.map(it=>{
     const bw=Math.round((it.q/maxQ)*55);
-    return `<div class="dl-row"><div><span class="dl-loc">${it.s}</span>
-      <div style="color:#3a4f6a;font-size:7.5px;overflow:hidden;text-overflow:ellipsis;max-width:140px">${it.n.slice(0,50)}</div></div>
-      <span class="dl-qty">${it.q.toLocaleString()}</span></div>
+    return `<div class="dl-row">
+        <div><span class="dl-loc" style="font-size:8.5px">${it.s}</span>
+        <div style="color:#3a4f6a;font-size:7.5px;overflow:hidden;text-overflow:ellipsis;max-width:140px">${it.n}</div></div>
+        <span class="dl-qty">${it.q.toLocaleString()}</span>
+      </div>
       <div class="dl-bar" style="width:${bw}px;background:#1a6ab0;margin:0 4px 3px"></div>`;
   }).join('');
-  const det=document.getElementById('sku-detail');
-  det.innerHTML=`<div class="sd-title">Pallet #${pnum}</div>
-    <div style="color:#5577aa;font-size:8.5px;margin-bottom:4px">${items.length} SKU(s) | <b style="color:#50e090">${totalQty.toLocaleString()}</b> ea</div>
-    ${locsHtml}`;
-  det.style.display='block';
-  document.getElementById('detail-title').textContent=`Pallet #${pnum}`;
+  document.getElementById('detail-title').textContent='Pallet #'+pnum;
   document.getElementById('sb-sel').style.display='none';
-  document.getElementById('detail-list').style.display='none';
+  document.getElementById('sku-detail').style.display='none';
+  const list=document.getElementById('detail-list');
+  list.style.display='block';
+  list.innerHTML=`<div class="dl-summary">${items.length} SKU(s) | <b style="color:#50e090">${totalQty.toLocaleString()}</b> ea</div>${rowsHtml}`;
 }
 
 function search3PL(val){
@@ -238,11 +238,14 @@ function select3PLSKU(sku){
       <span class="dl-loc">📦 ${p.p}</span><span class="dl-qty">${p.q.toLocaleString()}</span></div>
       <div class="dl-bar" style="width:${bw}px;background:#1a6ab0;margin:0 4px 3px"></div>`;
   }).join('');
-  det.innerHTML=`<div class="sd-title">${sku}</div>
-    <div style="color:#556688;font-size:8.5px;margin-bottom:4px">${d.n.slice(0,60)}</div>
-    <div style="color:#5577aa;font-size:8.5px;margin-bottom:4px">Total: <b style="color:#50e090">${d.total.toLocaleString()}</b> ea in <b style="color:#88b4ee">${d.pallets.length}</b> pallet(s)</div>
+  document.getElementById('detail-title').textContent=sku;
+  document.getElementById('sb-sel').style.display='none';
+  document.getElementById('sku-detail').style.display='none';
+  const list3=document.getElementById('detail-list');
+  list3.style.display='block';
+  list3.innerHTML=`<div class="dl-summary">${d.n.slice(0,55)}</div>
+    <div class="dl-summary">Total: <b style="color:#50e090">${d.total.toLocaleString()}</b> ea | <b style="color:#88b4ee">${d.pallets.length}</b> pallet(s)</div>
     ${locsHtml}`;
-  det.style.display='block';
 }
 
 </script>
@@ -256,9 +259,7 @@ function select3PLSKU(sku){
 </div>
 <div id="ibar">
   <div>Warehouse: <b id="ib-name">PICO</b></div>
-  <div>Located Qty: <b id="ib-lt">1,068,319</b></div>
-  <div>Default Qty: <b id="ib-dt" style="color:#cc9933">1,008,084</b></div>
-  <div>Total Qty: <b id="ib-gt" class="highlight">2,076,403</b></div>
+  <div>Total Qty: <b id="ib-gt" class="highlight" style="color:#ffcc44">2,076,403</b></div>
   <div style="margin-left:auto;color:#446688;font-size:10px">Updated: <b style="color:#5599cc">2026-07-22</b></div>
 </div>
 <div id="main">
@@ -289,12 +290,7 @@ function select3PLSKU(sku){
       <input id="sku-input" type="text" placeholder="🔍 Search SKU or item name..." oninput="searchSKU(this.value)" autocomplete="off" style="width:100%;background:#0d1a35;border:1px solid #1e3060;color:#a0c8ff;border-radius:4px;padding:5px 8px;font-size:10.5px;outline:none;box-sizing:border-box">
       <div id="sku-results" style="max-height:110px;overflow-y:auto;margin-top:4px;font-size:9.5px"></div>
     </div>
-    <div class="sidebar-stat">
-      <h3>📊 Inventory Summary</h3>
-      <div class="stat-row"><span class="stat-label">Located</span><span class="stat-val" id="sb-lt">1,068,319</span></div>
-      <div class="stat-row"><span class="stat-label">Default</span><span class="stat-val orange" id="sb-dt">1,008,084</span></div>
-      <div class="stat-row"><span class="stat-label">Total</span><span class="stat-val gold" id="sb-gt">2,076,403</span></div>
-    </div>
+    
     <div class="sidebar-stat">
       <h3>🎨 Color Scale</h3>
       <div class="legend-item"><div class="leg-color" style="background:#1a1a38;border:1px solid #2a2a55"></div>Empty</div>
@@ -856,7 +852,21 @@ function renderDetail(){
       return;
     }
     const baseLabel=h.label.replace(/ \(upper\)| \(lower\)/g,'');
-    const zoneItems=(LOC_ITEMS[curWH]||{})[h.label]||(LOC_ITEMS[curWH]||{})[baseLabel]||[];
+    // Aggregate all location items matching the base label prefix (e.g. P2-G-*)
+    const locInv=LOC_ITEMS[curWH]||{};
+    let zoneItems=(locInv[h.label]||locInv[baseLabel]||[]);
+    if(zoneItems.length===0 && baseLabel.match(/^[PB][12]-[A-Z]+$/)){
+      // Collect all matching bay items (P2-G-xx-x)
+      const prefix=baseLabel+'-';
+      const merged={};
+      Object.keys(locInv).filter(k=>k.startsWith(prefix)).forEach(k=>{
+        (locInv[k]||[]).forEach(it=>{
+          if(!merged[it.s]) merged[it.s]={s:it.s,n:it.n,q:0};
+          merged[it.s].q+=it.q;
+        });
+      });
+      zoneItems=Object.values(merged).sort((a,b)=>b.q-a.q);
+    }
     const maxQz=zoneItems.length>0?Math.max(...zoneItems.map(i=>i.q)):1;
     const itemsHtml=zoneItems.length>0
       ? zoneItems.map(it=>{const bw=Math.round((it.q/maxQz)*55);
@@ -1082,12 +1092,7 @@ function switchWH(wh){
 
   const d=INV[wh];
   document.getElementById('ib-name').textContent=wh;
-  document.getElementById('ib-lt').textContent=d.LT.toLocaleString();
-  document.getElementById('ib-dt').textContent=d.D.toLocaleString();
   document.getElementById('ib-gt').textContent=d.GT.toLocaleString();
-  document.getElementById('sb-lt').textContent=d.LT.toLocaleString();
-  document.getElementById('sb-dt').textContent=d.D.toLocaleString();
-  document.getElementById('sb-gt').textContent=d.GT.toLocaleString();
 
   sc=1; ox=0; oy=0;
   draw();
