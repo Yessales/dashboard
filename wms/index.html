@@ -288,7 +288,6 @@ function select3PLSKU(sku){
     <div style="padding:7px 10px;border-bottom:1px solid #0f1828">
       <input id="sku-input" type="text" placeholder="🔍 Search SKU or item name..." oninput="searchSKU(this.value)" autocomplete="off" style="width:100%;background:#0d1a35;border:1px solid #1e3060;color:#a0c8ff;border-radius:4px;padding:5px 8px;font-size:10.5px;outline:none;box-sizing:border-box">
       <div id="sku-results" style="max-height:110px;overflow-y:auto;margin-top:4px;font-size:9.5px"></div>
-      <div id="sku-detail" style="display:none;margin-top:5px;padding:5px;background:#0a1020;border-radius:4px;font-size:9.5px;max-height:170px;overflow-y:auto"></div>
     </div>
     <div class="sidebar-stat">
       <h3>📊 Inventory Summary</h3>
@@ -316,6 +315,7 @@ function select3PLSKU(sku){
       <div id="detail-list" style="display:none;margin-top:6px"></div>
     </div>
   </div>
+    <div id="sku-detail" style="display:none;margin:6px 10px;padding:6px;background:#0a1020;border-radius:5px;font-size:9.5px;max-height:200px;overflow-y:auto;border:1px solid #1a2e58"></div>
 </div>
 
 <script>
@@ -550,8 +550,8 @@ function drawPICO(inv){
 
   // P2-G (two sections bottom-right)
   let p2gQty=0; for(let b=1;b<=9;b++) for(let sh=1;sh<=2;sh++) p2gQty+=INV.PICO.L[`P2-G-${String(b).padStart(2,'0')}-${sh}`]||0;
-  drawRackCol(ctx,X,Y,S,rcX+8.7,p2RackTop,3.0,rackH*0.4,Math.round(p2gQty*0.5),9,'P2-G (upper)',hitBoxes);
-  drawRackCol(ctx,X,Y,S,rcX+8.7,p2RackTop+rackH*0.55,3.0,rackH*0.35,Math.round(p2gQty*0.5),9,'P2-G (lower)',hitBoxes);
+  drawRackCol(ctx,X,Y,S,rcX+8.7,p2RackTop,3.0,rackH*0.4,Math.round(p2gQty*0.5),9,'P2-G (upper)',hitBoxes,true);
+  drawRackCol(ctx,X,Y,S,rcX+8.7,p2RackTop+rackH*0.55,3.0,rackH*0.35,Math.round(p2gQty*0.5),9,'P2-G (lower)',hitBoxes,true);
 
   // ── Deck 4 (bottom-left) ─────────────────────────────────────
   ctx.fillStyle='#2a2a2a';ctx.strokeStyle='#444';ctx.lineWidth=1;
@@ -838,6 +838,11 @@ function renderDetail(){
   // Special zones don't have bay breakdown
   const m=h.label.match(/^([PB][12])-([A-Z]+)$/);
   if(!m || h.special){
+    // For split labels like 'P2-G (upper)', also check base key 'P2-G'
+    const baseLabel = h.label.replace(/ \(upper\)| \(lower\)/g, '');
+    const zoneItems=(LOC_ITEMS[curWH]||{})[h.label]
+      || (LOC_ITEMS[curWH]||{})[baseLabel]
+      || [];
     if(h.isDefault){
       const wh=h.label.split('-')[0];
       const defItems=DEF_ITEMS[wh]||{};
@@ -1050,13 +1055,18 @@ function switchWH(wh){
     cvWrap.style.display='none';
     document.getElementById('zoom-btns').style.display='none';
     document.getElementById('controls').style.display='none';
-    // Reset SKU search
     document.getElementById('sku-input').value='';
     document.getElementById('sku-results').innerHTML='';
     document.getElementById('sku-detail').style.display='none';
+    // Hide inventory summary for 3PL
+    document.querySelectorAll('.sidebar-stat').forEach(el=>el.style.display='none');
     selGroup=-1;
     draw3PL();
+    return;
   } else {
+    // Show inventory summary for PICO/BOYLE
+    document.querySelectorAll('.sidebar-stat').forEach(el=>el.style.display='');
+  }
     tplWrap.style.display='none';
     cvWrap.style.display='block';
     document.getElementById('zoom-btns').style.display='flex';
