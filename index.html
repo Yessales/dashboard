@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>YES SALES INC. — Inventory & Sales Dashboard</title>
+<title>YES SALES INC. — Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -11,6 +11,9 @@ body{font-family:'Segoe UI',sans-serif;background:#EEF2F7;color:#2C3E50}
 .banner-title{font-size:17px;font-weight:700}
 .banner-sub{font-size:10px;color:#AED6F1;margin-top:3px}
 .badge{background:#2471A3;color:#fff;border-radius:20px;padding:5px 14px;font-size:10px;font-weight:600}
+.mode-bar{display:flex;gap:8px;padding:14px 24px;background:#1A1A2E;border-bottom:3px solid #2471A3}
+.mode-btn{padding:9px 28px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;background:rgba(255,255,255,.1);color:#AED6F1;border:2px solid transparent;transition:all .2s}
+.mode-btn.active{background:#2471A3;color:#fff;border-color:#5DADE2}
 .nav{display:flex;gap:4px;padding:14px 24px 0}
 .nav-tab{padding:8px 20px;border-radius:10px 10px 0 0;font-size:12px;font-weight:600;cursor:pointer;background:#D6DBE5;color:#5D6D7E;border:none;transition:all .2s}
 .nav-tab.active{background:#fff;color:#1A1A2E;box-shadow:0 -2px 6px rgba(0,0,0,.07)}
@@ -62,30 +65,39 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 <div class="banner">
   <div>
     <div class="banner-title">YES SALES INC. &nbsp;|&nbsp; Inventory &amp; Sales Dashboard</div>
-    <div class="banner-sub">2025 Full Year (WK01–52) &nbsp;vs&nbsp; 2026 YTW (WK01–WK31) &nbsp;·&nbsp; Qty only &nbsp;·&nbsp; MW_OHW010002/020002 excluded</div>
+    <div class="banner-sub">2025 Full Year (WK01-52) &nbsp;vs&nbsp; 2026 YTW (WK01-WK31)</div>
   </div>
   <div class="badge">07/27/2026</div>
 </div>
+
+<!-- ===== MODE BAR ===== -->
+<div class="mode-bar">
+  <button class="mode-btn active" id="mode-units" onclick="setMode('units',this)">&#128230; Units</button>
+  <button class="mode-btn" id="mode-price" onclick="setMode('price',this)">&#128176; Price (USD)</button>
+</div>
+
+<!-- ===== UNITS SECTION ===== -->
+<div id="units-section">
 <div class="nav">
-  <button class="nav-tab active" onclick="showPanel('summary',this)">📊 Summary</button>
-  <button class="nav-tab" onclick="showPanel('combo',this)">📈 Sales &amp; Inventory</button>
-  <button class="nav-tab" onclick="showPanel('yoy',this)">🔁 YoY Comparison</button>
-  <button class="nav-tab" onclick="showPanel('table',this)">📋 Weekly Table</button>
+  <button class="nav-tab active" onclick="showPanel('summary',this)">&#128202; Summary</button>
+  <button class="nav-tab" onclick="showPanel('combo',this)">&#128200; Sales &amp; Inventory</button>
+  <button class="nav-tab" onclick="showPanel('yoy',this)">&#128260; YoY Comparison</button>
+  <button class="nav-tab" onclick="showPanel('table',this)">&#128203; Weekly Table</button>
 </div>
 <div id="panel-summary" class="panel active">
   <div class="kpi-row">
     <div class="kpi orange"><label>2023 Annual Sales</label><div class="val">3.82M</div><div class="note">3,815,564 units</div></div>
     <div class="kpi orange"><label>2024 Annual Sales</label><div class="val">7.15M</div><div class="note">7,149,168 units &nbsp;|&nbsp; YoY +87.4%</div></div>
-    <div class="kpi"><label>2025 Full Year Sales</label><div class="val">8.70M</div><div class="note">8,699,764 units (WK01–52)</div></div>
-    <div class="kpi green"><label>2026 YTW (WK01–31)</label><div class="val">8.72M</div><div class="note">8,715,684 units</div></div>
+    <div class="kpi"><label>2025 Full Year Sales</label><div class="val">8.70M</div><div class="note">8,699,764 units (WK01-52)</div></div>
+    <div class="kpi green"><label>2026 YTW (WK01-31)</label><div class="val">8.72M</div><div class="note">8,715,684 units</div></div>
     <div class="kpi red"><label>2025 WK52 Inventory</label><div class="val">4.22M</div><div class="note">4,219,802 units</div></div>
-    <div class="kpi purple"><label>2026 WK31 Inventory (est.)</label><div class="val">3.21M</div><div class="note">3,214,316 units</div></div>
+    <div class="kpi purple"><label>2026 WK31 Inventory</label><div class="val">3.21M</div><div class="note">3,214,316 units</div></div>
   </div>
-  <div class="card"><h2>📅 Annual Sales Summary (2023–2026)</h2><div class="chart-wrap" style="height:260px"><canvas id="annualChart"></canvas></div></div>
+  <div class="card"><h2>&#128197; Annual Sales Summary — Units (2023-2026)</h2><div class="chart-wrap" style="height:260px"><canvas id="annualChart"></canvas></div></div>
 </div>
 <div id="panel-combo" class="panel">
   <div class="card" style="margin-top:16px">
-    <h2>📈 Weekly Sales &amp; Inventory Trend</h2>
+    <h2>&#128200; Weekly Sales &amp; Inventory Trend — Units</h2>
     <div class="leg">
       <span><span class="ls" style="background:#F39C12"></span>2025 Sales</span>
       <span><span class="ls" style="background:#1A5276"></span>2026 Sales</span>
@@ -97,22 +109,22 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </div>
 <div id="panel-yoy" class="panel">
   <div class="card" style="margin-top:16px">
-    <h2>🔁 2025 vs 2026 Weekly Sales</h2>
+    <h2>&#128260; 2025 vs 2026 Weekly Sales — Units</h2>
     <div class="leg"><span><span class="ls" style="background:#F39C12"></span>2025</span><span><span class="ls" style="background:#1A5276"></span>2026 YTW</span></div>
     <div class="chart-wrap tall"><canvas id="yoyChart"></canvas></div>
   </div>
-  <div class="card"><h2>📊 YoY % Change by Week</h2><div class="chart-wrap" style="height:220px"><canvas id="yoyBarChart"></canvas></div></div>
+  <div class="card"><h2>&#128202; YoY % Change by Week — Units</h2><div class="chart-wrap" style="height:220px"><canvas id="yoyBarChart"></canvas></div></div>
 </div>
 <div id="panel-table" class="panel">
   <div class="card" style="margin-top:16px">
-    <h2>📋 Weekly Detail Table</h2>
+    <h2>&#128203; Weekly Detail Table — Units</h2>
     <div class="tbl-controls">
-      <input type="text" id="searchBox" placeholder="🔍 Search week..." oninput="filterTable()">
+      <input type="text" id="searchBox" placeholder="Search week..." oninput="filterTable()">
       <div class="filter-btns">
         <button class="fbtn active" onclick="setFilter('all',this)">All 52 Weeks</button>
         <button class="fbtn" onclick="setFilter('ytw',this)">2026 YTW</button>
-        <button class="fbtn" onclick="setFilter('pos',this)">YoY ↑</button>
-        <button class="fbtn" onclick="setFilter('neg',this)">YoY ↓</button>
+        <button class="fbtn" onclick="setFilter('pos',this)">YoY Up</button>
+        <button class="fbtn" onclick="setFilter('neg',this)">YoY Down</button>
       </div>
     </div>
     <div class="tbl-wrap"><table id="dataTable">
@@ -125,23 +137,209 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
     </table></div>
   </div>
 </div>
-<footer>YES SALES INC. Confidential &nbsp;·&nbsp; Updated 07/27/2026 &nbsp;·&nbsp; MW_OHW010002/020002 excluded</footer>
+</div><!-- end units-section -->
+
+<!-- ===== PRICE SECTION ===== -->
+<div id="price-section" style="display:none">
+<div class="nav">
+  <button class="nav-tab active" onclick="showPPanel('psummary',this)">&#128202; Summary</button>
+  <button class="nav-tab" onclick="showPPanel('pcombo',this)">&#128200; Weekly Sales</button>
+  <button class="nav-tab" onclick="showPPanel('pyoy',this)">&#128260; YoY Comparison</button>
+  <button class="nav-tab" onclick="showPPanel('ptable',this)">&#128203; Weekly Table</button>
+</div>
+<div id="panel-psummary" class="panel active">
+  <div class="kpi-row">
+    <div class="kpi orange"><label>2023 Annual Sales</label><div class="val">$0.00M</div><div class="note">0</div></div>
+    <div class="kpi orange"><label>2024 Annual Sales</label><div class="val">$0.00M</div><div class="note">0 &nbsp;|&nbsp; YoY +0%</div></div>
+    <div class="kpi"><label>2025 Full Year Sales</label><div class="val">$0.00M</div><div class="note">$0 (WK01-52)</div></div>
+    <div class="kpi green"><label>2026 YTW (WK01-31)</label><div class="val">$0.00M</div><div class="note">$0</div></div>
+  </div>
+  <div class="card"><h2>&#128197; Annual Sales Summary — USD (2023-2026)</h2><div class="chart-wrap" style="height:260px"><canvas id="annualChartUSD"></canvas></div></div>
+</div>
+<div id="panel-pcombo" class="panel">
+  <div class="card" style="margin-top:16px">
+    <h2>&#128200; Weekly Sales Trend — USD</h2>
+    <div class="leg">
+      <span><span class="ls" style="background:#F39C12"></span>2025 Sales</span>
+      <span><span class="ls" style="background:#1A5276"></span>2026 Sales</span>
+    </div>
+    <div class="chart-wrap tall"><canvas id="comboChartUSD"></canvas></div>
+  </div>
+</div>
+<div id="panel-pyoy" class="panel">
+  <div class="card" style="margin-top:16px">
+    <h2>&#128260; 2025 vs 2026 Weekly Sales — USD</h2>
+    <div class="leg"><span><span class="ls" style="background:#F39C12"></span>2025</span><span><span class="ls" style="background:#1A5276"></span>2026 YTW</span></div>
+    <div class="chart-wrap tall"><canvas id="yoyChartUSD"></canvas></div>
+  </div>
+  <div class="card"><h2>&#128202; YoY % Change by Week — USD</h2><div class="chart-wrap" style="height:220px"><canvas id="yoyBarChartUSD"></canvas></div></div>
+</div>
+<div id="panel-ptable" class="panel">
+  <div class="card" style="margin-top:16px">
+    <h2>&#128203; Weekly Detail Table — USD</h2>
+    <div class="tbl-controls">
+      <input type="text" id="searchBoxP" placeholder="Search week..." oninput="filterTableP()">
+      <div class="filter-btns">
+        <button class="fbtn active" onclick="setFilterP('all',this)">All 52 Weeks</button>
+        <button class="fbtn" onclick="setFilterP('ytw',this)">2026 YTW</button>
+        <button class="fbtn" onclick="setFilterP('pos',this)">YoY Up</button>
+        <button class="fbtn" onclick="setFilterP('neg',this)">YoY Down</button>
+      </div>
+    </div>
+    <div class="tbl-wrap"><table id="dataTableP">
+      <thead><tr>
+        <th onclick="sortTableP(0)">Week</th>
+        <th onclick="sortTableP(1)">2025 Sales ($)</th>
+        <th onclick="sortTableP(2)">2026 Sales ($)</th>
+        <th onclick="sortTableP(3)">YoY %</th>
+      </tr></thead>
+      <tbody id="tableBodyP"></tbody>
+    </table></div>
+  </div>
+</div>
+</div><!-- end price-section -->
+
+<footer>YES SALES INC. Confidential &nbsp;·&nbsp; Updated 07/27/2026</footer>
 <script>
 const LABELS=["WK01", "WK02", "WK03", "WK04", "WK05", "WK06", "WK07", "WK08", "WK09", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33", "WK34", "WK35", "WK36", "WK37", "WK38", "WK39", "WK40", "WK41", "WK42", "WK43", "WK44", "WK45", "WK46", "WK47", "WK48", "WK49", "WK50", "WK51", "WK52"],S25=[122100, 216675, 32955, 206193, 438274, 198345, 109898, 90314, 86949, 145597, 98487, 29925, 252245, 174746, 102896, 63126, 121918, 179494, 85259, 94648, 92311, 300555, 120135, 193458, 249500, 93930, 159086, 109807, 196487, 681659, 133367, 225324, 84431, 312907, 248243, 158644, 153982, 256856, 180762, 50676, 72813, 78411, 437609, 102351, 114042, 68701, 254918, 163676, 64783, 100307, 161808, 228181],S26R=[53306, 126702, 1152732, 649308, 84340, 282792, 465104, 153770, 176358, 247808, 141640, 713101, 525261, 330341, 174475, 121593, 852401, 218881, 141976, 117619, 359103, 199079, 82891, 123030, 162575, 554860, 155394, 166492, 102143, 79841, 768, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"],I25=[2906206, 2689531, 2848358, 2758325, 2441475, 2519226, 2652856, 2673482, 2586533, 2754184, 2945641, 3100448, 2848203, 2930061, 2919517, 2871079, 2795673, 2898827, 2982544, 2887896, 3002988, 2832437, 2759870, 2662838, 2490690, 3145236, 3465765, 3474139, 3412844, 3419709, 3511423, 3529891, 3791300, 4061269, 3891794, 3823078, 3896496, 3724672, 3617197, 3811013, 3738200, 3957389, 3755322, 3781583, 3733445, 3949293, 3689315, 3782387, 3751300, 4060541, 4060969, 4219802],I26R=[4174609, 5111253, 4611705, 4483898, 4741046, 4747634, 4477542, 4513636, 5074523, 5215563, 5522087, 4894234, 4532989, 4441996, 4387005, 4858070, 4127782, 4066245, 4419897, 4396379, 4338080, 4163028, 4291252, 4290292, 4250296, 3695748, 3560012, 3397068, 3294925, 3215084, 3214316, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"],YOYR=[-56.3, -41.5, 3397.9, 214.9, -80.8, 42.6, 323.2, 70.3, 102.8, 70.2, 43.8, 2283.0, 108.2, 89.0, 69.6, 92.6, 599.2, 21.9, 66.5, 24.3, 289.0, -33.8, -31.0, -36.4, -34.8, 490.7, -2.3, 51.6, -48.0, -88.3, -99.4, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"],LAST_WK=31;
+const SU25=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],SU26R=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"],YOYUR=["null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"];
 const ANNUAL={"2023":3815564,"2024":7149168,"2025":8699764,"2026 YTW":8715684};
+const ANNUAL_USD={"2023":0,"2024":0,"2025":0,"2026 YTW":0};
 const S26=S26R.map(v=>v==="null"?null:v),I26=I26R.map(v=>v==="null"?null:v),YOYP=YOYR.map(v=>v==="null"?null:v);
-function showPanel(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');el.classList.add('active');if(id==='combo'&&!window._ci){initCombo();window._ci=true}if(id==='yoy'&&!window._yi){initYoY();window._yi=true}if(id==='table'&&!window._ti){buildTable();window._ti=true}}
-(function(){const ctx=document.getElementById('annualChart').getContext('2d');new Chart(ctx,{type:'bar',data:{labels:Object.keys(ANNUAL),datasets:[{label:'Sales',data:Object.values(ANNUAL),backgroundColor:['#F39C12','#E67E22','#2471A3','#27AE60'],borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.parsed.y.toLocaleString()+' units'}}},scales:{y:{ticks:{callback:v=>(v/1e6).toFixed(1)+'M',font:{size:10}},grid:{color:'#F0F4F8'}},x:{grid:{display:false}}}}})})();
-function initCombo(){const ctx=document.getElementById('comboChart').getContext('2d');new Chart(ctx,{data:{labels:LABELS,datasets:[{type:'line',label:'2025 Sales',data:S25,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.05)',borderWidth:2,pointRadius:2,yAxisID:'y',tension:.3,fill:true},{type:'line',label:'2026 Sales',data:S26,borderColor:'#1A5276',backgroundColor:'rgba(26,82,118,.05)',borderWidth:2.5,pointRadius:2,yAxisID:'y',tension:.3,fill:true,spanGaps:false},{type:'line',label:'2025 Inventory',data:I25,borderColor:'#E74C3C',backgroundColor:'transparent',borderWidth:2,pointRadius:1,yAxisID:'y2',tension:.2,borderDash:[5,3],spanGaps:false},{type:'line',label:'2026 Inventory',data:I26,borderColor:'#27AE60',backgroundColor:'transparent',borderWidth:2,pointRadius:1,yAxisID:'y2',tension:.2,borderDash:[5,3],spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},tooltip:{callbacks:{label:c=>c.parsed.y!=null?' '+c.dataset.label+': '+c.parsed.y.toLocaleString():null}}},scales:{x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},y:{position:'left',title:{display:true,text:'Sales Qty',font:{size:10}},ticks:{callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v,font:{size:9}},grid:{color:'#E8ECEF'}},y2:{position:'right',title:{display:true,text:'Inventory',font:{size:10}},ticks:{callback:v=>(v/1e6).toFixed(1)+'M',font:{size:9}},grid:{drawOnChartArea:false}}}}})}
+const SU26=SU26R.map(v=>v==="null"?null:v),YOYUP=YOYUR.map(v=>v==="null"?null:v);
 
-function initYoY(){const ctx1=document.getElementById('yoyChart').getContext('2d');new Chart(ctx1,{type:'line',data:{labels:LABELS,datasets:[{label:'2025',data:S25,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.05)',borderWidth:2,pointRadius:2,tension:.3,fill:true},{label:'2026 YTW',data:S26,borderColor:'#1A5276',backgroundColor:'rgba(26,82,118,.05)',borderWidth:2.5,pointRadius:2,tension:.3,fill:true,spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},tooltip:{callbacks:{label:c=>c.parsed.y!=null?' '+c.dataset.label+': '+c.parsed.y.toLocaleString():null}}},scales:{x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},y:{ticks:{callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v,font:{size:9}},grid:{color:'#E8ECEF'}}}}});const ctx2=document.getElementById('yoyBarChart').getContext('2d');const yoyColors=YOYP.slice(0,LAST_WK).map(v=>v===null?'#BDC3C7':v>=0?'#27AE60':'#E74C3C');new Chart(ctx2,{type:'bar',data:{labels:LABELS.slice(0,LAST_WK),datasets:[{label:'YoY %',data:YOYP.slice(0,LAST_WK),backgroundColor:yoyColors,borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y!=null?(c.parsed.y>=0?' +':' ')+c.parsed.y+'%':' —'}}},scales:{x:{ticks:{font:{size:9}},grid:{display:false}},y:{ticks:{callback:v=>v+'%',font:{size:9}},grid:{color:'#F0F4F8'},title:{display:true,text:'YoY %',font:{size:9}}}}}})}
+// Mode switching
+function setMode(mode,el){
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('units-section').style.display=mode==='units'?'block':'none';
+  document.getElementById('price-section').style.display=mode==='price'?'block':'none';
+}
 
-let curFilter='all',curSearch='',sortCol=0,sortDir=1;
-const rawRows=LABELS.map((lbl,i)=>({wk:lbl,wkNum:i+1,s25:S25[i],s26:S26[i],yoy:YOYP[i],i25:I25[i],i26:I26[i],isYTW:i<LAST_WK}));
-function buildTable(){let rows=[...rawRows];if(curFilter==='ytw')rows=rows.filter(r=>r.isYTW);if(curFilter==='pos')rows=rows.filter(r=>r.yoy!==null&&r.yoy>=0);if(curFilter==='neg')rows=rows.filter(r=>r.yoy!==null&&r.yoy<0);if(curSearch)rows=rows.filter(r=>r.wk.toLowerCase().includes(curSearch.toLowerCase()));rows.sort((a,b)=>{const k=['wkNum','s25','s26','yoy','i25','i26'][sortCol];return sortDir*((a[k]??-Infinity)-(b[k]??-Infinity))});let html=rows.map(r=>{const s26s=r.s26!==null?r.s26.toLocaleString():'<span class="dim">—</span>';const i25s=r.i25!==null?r.i25.toLocaleString():'<span class="dim">—</span>';const i26s=r.i26!==null?r.i26.toLocaleString():'<span class="dim">—</span>';const ys=r.yoy!==null?`<span class="${r.yoy>=0?'pos':'neg'}">${r.yoy>=0?'+':''}${r.yoy}%</span>`:'<span class="dim">—</span>';return `<tr class="${r.isYTW?'ytw-row':''}"><td>${r.wk}</td><td>${r.s25.toLocaleString()}</td><td>${s26s}</td><td>${ys}</td><td>${i25s}</td><td>${i26s}</td></tr>`}).join('');if(curFilter==='all'&&!curSearch){const s25v=rows.map(r=>r.s25).filter(v=>v!==null);const s26v=rows.map(r=>r.s26).filter(v=>v!==null);const i25v=rows.map(r=>r.i25).filter(v=>v!==null);const i26v=rows.map(r=>r.i26).filter(v=>v!==null);const yv=rows.map(r=>r.yoy).filter(v=>v!==null);const sm=a=>a.reduce((x,y)=>x+y,0);const av=a=>a.length?Math.round(sm(a)/a.length):null;const tS25=sm(s25v),tS26=sm(s26v),tI25=sm(i25v),tI26=sm(i26v);const tY=tS25>0&&s26v.length?Math.round((tS26/tS25-1)*1000)/10:null;const aS25=av(s25v),aS26=av(s26v),aI25=av(i25v),aI26=av(i26v);const aY=yv.length?Math.round(yv.reduce((a,b)=>a+b,0)/yv.length*10)/10:null;const ft=v=>v!==null?v.toLocaleString():'—';const fy=v=>v!==null?`<span class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${v}%</span>`:'—';html+=`<tr class="sum-tot"><td>TOTAL</td><td>${ft(tS25)}</td><td>${ft(tS26)}</td><td>${fy(tY)}</td><td>${ft(tI25)}</td><td>${ft(tI26)}</td></tr>`;html+=`<tr class="sum-avg"><td>AVERAGE</td><td>${ft(aS25)}</td><td>${ft(aS26)}</td><td>${fy(aY)}</td><td>${ft(aI25)}</td><td>${ft(aI26)}</td></tr>`;}document.getElementById('tableBody').innerHTML=html;}
+// Units panel switching
+function showPanel(id,el){
+  document.querySelectorAll('#units-section .panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#units-section .nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');el.classList.add('active');
+  if(id==='combo'&&!window._ci){initCombo();window._ci=true}
+  if(id==='yoy'&&!window._yi){initYoY();window._yi=true}
+  if(id==='table'&&!window._ti){buildTable();window._ti=true}
+}
+
+// Price panel switching
+function showPPanel(id,el){
+  document.querySelectorAll('#price-section .panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#price-section .nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');el.classList.add('active');
+  if(id==='pcombo'&&!window._pci){initComboUSD();window._pci=true}
+  if(id==='pyoy'&&!window._pyi){initYoYUSD();window._pyi=true}
+  if(id==='ptable'&&!window._pti){buildTableP();window._pti=true}
+}
+
+// USD formatter
+function fu(v){if(v==null)return '<span class="dim">-</span>';var n=Math.round(v);return'$'+n.toLocaleString()}
+function fuM(v){return v>=1e6?'$'+(v/1e6).toFixed(2)+'M':v>=1e3?'$'+(v/1e3).toFixed(0)+'K':'$'+Math.round(v)}
+
+// Annual chart — Units
+(function(){var ctx=document.getElementById('annualChart').getContext('2d');new Chart(ctx,{type:'bar',data:{labels:Object.keys(ANNUAL),datasets:[{label:'Sales',data:Object.values(ANNUAL),backgroundColor:['#F39C12','#E67E22','#2471A3','#27AE60'],borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.parsed.y.toLocaleString()+' units'}}},scales:{y:{ticks:{callback:v=>(v/1e6).toFixed(1)+'M',font:{size:10}},grid:{color:'#F0F4F8'}},x:{grid:{display:false}}}}})})();
+
+// Annual chart — USD
+(function(){var ctx=document.getElementById('annualChartUSD').getContext('2d');new Chart(ctx,{type:'bar',data:{labels:Object.keys(ANNUAL_USD),datasets:[{label:'Sales USD',data:Object.values(ANNUAL_USD),backgroundColor:['#F39C12','#E67E22','#2471A3','#27AE60'],borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' $'+c.parsed.y.toLocaleString()}}},scales:{y:{ticks:{callback:v=>fuM(v),font:{size:10}},grid:{color:'#F0F4F8'}},x:{grid:{display:false}}}}})})();
+
+// Combo chart — Units
+function initCombo(){var ctx=document.getElementById('comboChart').getContext('2d');new Chart(ctx,{data:{labels:LABELS,datasets:[{type:'line',label:'2025 Sales',data:S25,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.05)',borderWidth:2,pointRadius:2,yAxisID:'y',tension:.3,fill:true},{type:'line',label:'2026 Sales',data:S26,borderColor:'#1A5276',backgroundColor:'rgba(26,82,118,.05)',borderWidth:2.5,pointRadius:2,yAxisID:'y',tension:.3,fill:true,spanGaps:false},{type:'line',label:'2025 Inventory',data:I25,borderColor:'#E74C3C',backgroundColor:'transparent',borderWidth:2,pointRadius:1,yAxisID:'y2',tension:.2,borderDash:[5,3]},{type:'line',label:'2026 Inventory',data:I26,borderColor:'#27AE60',backgroundColor:'transparent',borderWidth:2,pointRadius:1,yAxisID:'y2',tension:.2,borderDash:[5,3],spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},tooltip:{callbacks:{label:c=>c.parsed.y!=null?' '+c.dataset.label+': '+c.parsed.y.toLocaleString():null}}},scales:{x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},y:{position:'left',title:{display:true,text:'Sales Qty',font:{size:10}},ticks:{callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v,font:{size:9}},grid:{color:'#E8ECEF'}},y2:{position:'right',title:{display:true,text:'Inventory',font:{size:10}},ticks:{callback:v=>(v/1e6).toFixed(1)+'M',font:{size:9}},grid:{drawOnChartArea:false}}}}})}
+
+// Combo chart — USD
+function initComboUSD(){var ctx=document.getElementById('comboChartUSD').getContext('2d');new Chart(ctx,{type:'line',data:{labels:LABELS,datasets:[{label:'2025 Sales',data:SU25,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.05)',borderWidth:2,pointRadius:2,tension:.3,fill:true},{label:'2026 Sales',data:SU26,borderColor:'#1A5276',backgroundColor:'rgba(26,82,118,.05)',borderWidth:2.5,pointRadius:2,tension:.3,fill:true,spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},tooltip:{callbacks:{label:c=>c.parsed.y!=null?' '+c.dataset.label+': $'+c.parsed.y.toLocaleString():null}}},scales:{x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},y:{title:{display:true,text:'Sales USD',font:{size:10}},ticks:{callback:v=>fuM(v),font:{size:9}},grid:{color:'#E8ECEF'}}}}})}
+
+// YoY charts — Units
+function initYoY(){
+  var c1=document.getElementById('yoyChart').getContext('2d');
+  new Chart(c1,{type:'line',data:{labels:LABELS,datasets:[{label:'2025',data:S25,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.05)',borderWidth:2,pointRadius:2,tension:.3,fill:true},{label:'2026 YTW',data:S26,borderColor:'#1A5276',backgroundColor:'rgba(26,82,118,.05)',borderWidth:2.5,pointRadius:2,tension:.3,fill:true,spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},tooltip:{callbacks:{label:c=>c.parsed.y!=null?' '+c.dataset.label+': '+c.parsed.y.toLocaleString():null}}},scales:{x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},y:{ticks:{callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v,font:{size:9}},grid:{color:'#E8ECEF'}}}}});
+  var c2=document.getElementById('yoyBarChart').getContext('2d');
+  var yc=YOYP.slice(0,LAST_WK).map(v=>v===null?'#BDC3C7':v>=0?'#27AE60':'#E74C3C');
+  new Chart(c2,{type:'bar',data:{labels:LABELS.slice(0,LAST_WK),datasets:[{label:'YoY %',data:YOYP.slice(0,LAST_WK),backgroundColor:yc,borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y!=null?(c.parsed.y>=0?' +':' ')+c.parsed.y+'%':' -'}}},scales:{x:{ticks:{font:{size:9}},grid:{display:false}},y:{ticks:{callback:v=>v+'%',font:{size:9}},grid:{color:'#F0F4F8'},title:{display:true,text:'YoY %',font:{size:9}}}}}});
+}
+
+// YoY charts — USD
+function initYoYUSD(){
+  var c1=document.getElementById('yoyChartUSD').getContext('2d');
+  new Chart(c1,{type:'line',data:{labels:LABELS,datasets:[{label:'2025',data:SU25,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.05)',borderWidth:2,pointRadius:2,tension:.3,fill:true},{label:'2026 YTW',data:SU26,borderColor:'#1A5276',backgroundColor:'rgba(26,82,118,.05)',borderWidth:2.5,pointRadius:2,tension:.3,fill:true,spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},tooltip:{callbacks:{label:c=>c.parsed.y!=null?' '+c.dataset.label+': $'+c.parsed.y.toLocaleString():null}}},scales:{x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},y:{title:{display:true,text:'USD',font:{size:10}},ticks:{callback:v=>fuM(v),font:{size:9}},grid:{color:'#E8ECEF'}}}}});
+  var c2=document.getElementById('yoyBarChartUSD').getContext('2d');
+  var yc=YOYUP.slice(0,LAST_WK).map(v=>v===null?'#BDC3C7':v>=0?'#27AE60':'#E74C3C');
+  new Chart(c2,{type:'bar',data:{labels:LABELS.slice(0,LAST_WK),datasets:[{label:'YoY %',data:YOYUP.slice(0,LAST_WK),backgroundColor:yc,borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y!=null?(c.parsed.y>=0?' +':' ')+c.parsed.y+'%':' -'}}},scales:{x:{ticks:{font:{size:9}},grid:{display:false}},y:{ticks:{callback:v=>v+'%',font:{size:9}},grid:{color:'#F0F4F8'},title:{display:true,text:'YoY %',font:{size:9}}}}}});
+}
+
+// Table — Units
+var rawRows=LABELS.map((lbl,i)=>({wk:lbl,wkNum:i+1,s25:S25[i],s26:S26[i],yoy:YOYP[i],i25:I25[i],i26:I26[i],isYTW:i<LAST_WK}));
+var curFilter='all',curSearch='',sortCol=0,sortDir=1;
+function buildTable(){
+  var rows=[...rawRows];
+  if(curFilter==='ytw')rows=rows.filter(r=>r.isYTW);
+  if(curFilter==='pos')rows=rows.filter(r=>r.yoy!==null&&r.yoy>=0);
+  if(curFilter==='neg')rows=rows.filter(r=>r.yoy!==null&&r.yoy<0);
+  if(curSearch)rows=rows.filter(r=>r.wk.toLowerCase().includes(curSearch.toLowerCase()));
+  rows.sort((a,b)=>{var k=['wkNum','s25','s26','yoy','i25','i26'][sortCol];return sortDir*((a[k]??-Infinity)-(b[k]??-Infinity))});
+  var html=rows.map(r=>{
+    var s26s=r.s26!==null?r.s26.toLocaleString():'<span class="dim">-</span>';
+    var i26s=r.i26!==null?r.i26.toLocaleString():'<span class="dim">-</span>';
+    var ys=r.yoy!==null?'<span class="'+(r.yoy>=0?'pos':'neg')+'">'+(r.yoy>=0?'+':'')+r.yoy+'%</span>':'<span class="dim">-</span>';
+    return'<tr class="'+(r.isYTW?'ytw-row':'')+'"><td>'+r.wk+'</td><td>'+r.s25.toLocaleString()+'</td><td>'+s26s+'</td><td>'+ys+'</td><td>'+r.i25.toLocaleString()+'</td><td>'+i26s+'</td></tr>';
+  }).join('');
+  if(curFilter==='all'&&!curSearch){
+    var s25v=rows.map(r=>r.s25).filter(v=>v!==null);
+    var s26v=rows.map(r=>r.s26).filter(v=>v!==null);
+    var i25v=rows.map(r=>r.i25).filter(v=>v!==null);
+    var i26v=rows.map(r=>r.i26).filter(v=>v!==null);
+    var yv=rows.map(r=>r.yoy).filter(v=>v!==null);
+    var sm=a=>a.reduce((x,y)=>x+y,0);
+    var av=a=>a.length?Math.round(sm(a)/a.length):null;
+    var tS25=sm(s25v),tS26=sm(s26v),tY=tS25>0&&s26v.length?Math.round((tS26/tS25-1)*1000)/10:null;
+    var aS25=av(s25v),aS26=av(s26v),aI25=av(i25v),aI26=av(i26v),aY=yv.length?Math.round(yv.reduce((a,b)=>a+b,0)/yv.length*10)/10:null;
+    var ft=v=>v!==null?v.toLocaleString():'-';
+    var fy=v=>v!==null?'<span class="'+(v>=0?'pos':'neg')+'">'+(v>=0?'+':'')+v+'%</span>':'-';
+    html+='<tr class="sum-tot"><td>TOTAL</td><td>'+ft(tS25)+'</td><td>'+ft(tS26)+'</td><td>'+fy(tY)+'</td><td>-</td><td>-</td></tr>';
+    html+='<tr class="sum-avg"><td>AVG/WK</td><td>'+ft(aS25)+'</td><td>'+ft(aS26)+'</td><td>'+fy(aY)+'</td><td>'+ft(aI25)+'</td><td>'+ft(aI26)+'</td></tr>';
+  }
+  document.getElementById('tableBody').innerHTML=html;
+}
 function filterTable(){curSearch=document.getElementById('searchBox').value;buildTable()}
-function setFilter(f,el){curFilter=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));el.classList.add('active');buildTable()}
-function sortTable(col){const ths=document.querySelectorAll('#dataTable thead th');ths.forEach(th=>th.classList.remove('sort-asc','sort-desc'));sortDir=(sortCol===col)?sortDir*-1:1;sortCol=col;ths[col].classList.add(sortDir===1?'sort-asc':'sort-desc');buildTable()}
+function setFilter(f,el){curFilter=f;document.querySelectorAll('#panel-table .fbtn').forEach(b=>b.classList.remove('active'));el.classList.add('active');buildTable()}
+function sortTable(col){var ths=document.querySelectorAll('#dataTable thead th');ths.forEach(th=>th.classList.remove('sort-asc','sort-desc'));sortDir=(sortCol===col)?sortDir*-1:1;sortCol=col;ths[col].classList.add(sortDir===1?'sort-asc':'sort-desc');buildTable()}
+
+// Table — USD
+var rawRowsP=LABELS.map((lbl,i)=>({wk:lbl,wkNum:i+1,su25:SU25[i],su26:SU26[i],yoyu:YOYUP[i],isYTW:i<LAST_WK}));
+var curFilterP='all',curSearchP='',sortColP=0,sortDirP=1;
+function buildTableP(){
+  var rows=[...rawRowsP];
+  if(curFilterP==='ytw')rows=rows.filter(r=>r.isYTW);
+  if(curFilterP==='pos')rows=rows.filter(r=>r.yoyu!==null&&r.yoyu>=0);
+  if(curFilterP==='neg')rows=rows.filter(r=>r.yoyu!==null&&r.yoyu<0);
+  if(curSearchP)rows=rows.filter(r=>r.wk.toLowerCase().includes(curSearchP.toLowerCase()));
+  rows.sort((a,b)=>{var k=['wkNum','su25','su26','yoyu'][sortColP];return sortDirP*((a[k]??-Infinity)-(b[k]??-Infinity))});
+  var html=rows.map(r=>{
+    var s26s=r.su26!==null?'$'+Math.round(r.su26).toLocaleString():'<span class="dim">-</span>';
+    var ys=r.yoyu!==null?'<span class="'+(r.yoyu>=0?'pos':'neg')+'">'+(r.yoyu>=0?'+':'')+r.yoyu+'%</span>':'<span class="dim">-</span>';
+    return'<tr class="'+(r.isYTW?'ytw-row':'')+'"><td>'+r.wk+'</td><td>$'+Math.round(r.su25).toLocaleString()+'</td><td>'+s26s+'</td><td>'+ys+'</td></tr>';
+  }).join('');
+  if(curFilterP==='all'&&!curSearchP){
+    var su25v=rows.map(r=>r.su25).filter(v=>v!==null);
+    var su26v=rows.map(r=>r.su26).filter(v=>v!==null);
+    var yuv=rows.map(r=>r.yoyu).filter(v=>v!==null);
+    var sm=a=>a.reduce((x,y)=>x+y,0);
+    var tU25=sm(su25v),tU26=sm(su26v),tY=tU25>0&&su26v.length?Math.round((tU26/tU25-1)*1000)/10:null;
+    var aU25=su25v.length?Math.round(tU25/su25v.length):null,aU26=su26v.length?Math.round(tU26/su26v.length):null;
+    var aY=yuv.length?Math.round(yuv.reduce((a,b)=>a+b,0)/yuv.length*10)/10:null;
+    var fu2=v=>v!==null?'$'+Math.round(v).toLocaleString():'-';
+    var fy=v=>v!==null?'<span class="'+(v>=0?'pos':'neg')+'">'+(v>=0?'+':'')+v+'%</span>':'-';
+    html+='<tr class="sum-tot"><td>TOTAL</td><td>'+fu2(tU25)+'</td><td>'+fu2(tU26)+'</td><td>'+fy(tY)+'</td></tr>';
+    html+='<tr class="sum-avg"><td>AVG/WK</td><td>'+fu2(aU25)+'</td><td>'+fu2(aU26)+'</td><td>'+fy(aY)+'</td></tr>';
+  }
+  document.getElementById('tableBodyP').innerHTML=html;
+}
+function filterTableP(){curSearchP=document.getElementById('searchBoxP').value;buildTableP()}
+function setFilterP(f,el){curFilterP=f;document.querySelectorAll('#panel-ptable .fbtn').forEach(b=>b.classList.remove('active'));el.classList.add('active');buildTableP()}
+function sortTableP(col){var ths=document.querySelectorAll('#dataTableP thead th');ths.forEach(th=>th.classList.remove('sort-asc','sort-desc'));sortDirP=(sortColP===col)?sortDirP*-1:1;sortColP=col;ths[col].classList.add(sortDirP===1?'sort-asc':'sort-desc');buildTableP()}
 </script>
 <script>
 (function(){var P="1103";if(!P){document.getElementById('_pw').style.display='none';document.getElementById('_app').style.display='block';return;}document.getElementById('_pb').onclick=function(){if(document.getElementById('_pi').value===P){document.getElementById('_pw').style.display='none';document.getElementById('_app').style.display='block';}else{document.getElementById('_pe').textContent='Wrong password. Try again.';document.getElementById('_pi').value='';document.getElementById('_pi').focus();}};document.getElementById('_pi').onkeydown=function(e){if(e.keyCode===13)document.getElementById('_pb').click();};})();
