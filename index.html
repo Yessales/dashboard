@@ -342,7 +342,7 @@ function setFilterP(f,el){curFilterP=f;document.querySelectorAll('#panel-ptable 
 function sortTableP(col){var ths=document.querySelectorAll('#dataTableP thead th');ths.forEach(th=>th.classList.remove('sort-asc','sort-desc'));sortDirP=(sortColP===col)?sortDirP*-1:1;sortColP=col;ths[col].classList.add(sortDirP===1?'sort-asc':'sort-desc');buildTableP()}
 </script>
 <script>
-(function(){var P="1103";if(!P){document.getElementById('_pw').style.display='none';document.getElementById('_app').style.display='block';return;}document.getElementById('_pb').onclick=function(){if(document.getElementById('_pi').value===P){document.getElementById('_pw').style.display='none';document.getElementById('_app').style.display='block';}else{document.getElementById('_pe').textContent='Wrong password. Try again.';document.getElementById('_pi').value='';document.getElementById('_pi').focus();}};document.getElementById('_pi').onkeydown=function(e){if(e.keyCode===13)document.getElementById('_pb').click();};})();
+(function(){var P="1103";var PP="CEO1103";function show(pv){document.getElementById('_pw').style.display='none';document.getElementById('_app').style.display='block';if(!pv)document.getElementById('mode-price').style.display='none';}if(!P&&!PP){show(true);return;}document.getElementById('_pb').onclick=function(){var val=document.getElementById('_pi').value;if(PP&&val===PP){show(true);}else if(P&&val===P){show(false);}else{document.getElementById('_pe').textContent='Wrong password. Try again.';document.getElementById('_pi').value='';document.getElementById('_pi').focus();}};document.getElementById('_pi').onkeydown=function(e){if(e.keyCode===13)document.getElementById('_pb').click();};})();
 </script>
 </div>
 </body></html>
