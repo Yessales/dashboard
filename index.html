@@ -74,6 +74,7 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 <div class="mode-bar">
   <button class="mode-btn active" id="mode-units" onclick="setMode('units',this)">&#128230; Units</button>
   <button class="mode-btn" id="mode-price" onclick="setMode('price',this)">&#128176; Price (USD)</button>
+  <button class="mode-btn" id="mode-cost" onclick="setMode('cost',this)">&#128200; Cost Trend</button>
 </div>
 
 <!-- ===== UNITS SECTION ===== -->
@@ -199,6 +200,29 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </div>
 </div><!-- end price-section -->
 
+<!-- ===== COST TREND SECTION ===== -->
+<div id="cost-section" style="display:none">
+<div class="nav">
+  <button class="nav-tab active" onclick="showCTPanel('ctmain',this)">&#128200; Avg Cost &amp; Markup%</button>
+</div>
+<div id="panel-ctmain" class="panel active" style="padding-top:16px">
+  <div class="kpi-row">
+    <div class="kpi"><label>Latest Avg Cost</label><div class="val" id="ct-cur-cost">-</div><div class="note" id="ct-cur-date">-</div></div>
+    <div class="kpi purple"><label>Latest Markup%</label><div class="val" id="ct-cur-markup">-</div><div class="note">Inventory markup rate</div></div>
+    <div class="kpi orange"><label>Avg Cost (2026 avg)</label><div class="val" id="ct-avg-cost">-</div><div class="note">2026 weekly average</div></div>
+    <div class="kpi green"><label>Avg Markup% (2026)</label><div class="val" id="ct-avg-markup">-</div><div class="note">2026 weekly average</div></div>
+  </div>
+  <div class="card">
+    <h2>&#128200; Weekly Avg Cost &amp; Markup% Trend (2025-12-29 ~ present)</h2>
+    <div class="leg">
+      <span><span class="ls" style="background:#E74C3C"></span>Avg Cost ($/unit, left)</span>
+      <span><span class="ls" style="background:#8E44AD;border-top:2px dashed #8E44AD"></span>Markup% (right)</span>
+    </div>
+    <div class="chart-wrap tall"><canvas id="costTrendChart"></canvas></div>
+  </div>
+</div>
+</div><!-- end cost-section -->
+
 <footer>YES SALES INC. Confidential &nbsp;·&nbsp; Updated 10/12/2026</footer>
 <script>
 const LABELS=["WK01", "WK02", "WK03", "WK04", "WK05", "WK06", "WK07", "WK08", "WK09", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33", "WK34", "WK35", "WK36", "WK37", "WK38", "WK39", "WK40", "WK41", "WK42", "WK43", "WK44", "WK45", "WK46", "WK47", "WK48", "WK49", "WK50", "WK51", "WK52"],S25=[126132, 216675, 32955, 206193, 438274, 198345, 109898, 90314, 86949, 145597, 98487, 29925, 252245, 174746, 102896, 63126, 122182, 179494, 85259, 94648, 92287, 300555, 120135, 193458, 249500, 93988, 159086, 109849, 196487, 681871, 133367, 225324, 84431, 312907, 248243, 158644, 153980, 256856, 180762, 50676, 72813, 78411, 437609, 102351, 114051, 68701, 254918, 163676, 64783, 100307, 161808, 228181],S26R=[53306, 130734, 1152732, 649308, 84340, 283368, 465104, 157442, 178446, 247813, 127246, 713101, 525261, 330341, 174487, 121593, 852401, 219767, 141886, 117595, 359223, 199079, 84600, 123318, 163364, 554926, 155475, 177803, 97699, 93435, 274213, 224203, 83443, 57675, 162687, 628478, 65201, 127818, 148796, 420253, 219619, 4728, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"],I25=[2809311, 2592636, 2751463, 2658406, 2338724, 2416475, 2550105, 2570731, 2483782, 2651433, 2842890, 2997697, 2745452, 2827310, 2816766, 2768328, 2692658, 2796772, 2880489, 2785841, 2900957, 2730406, 2657839, 2560807, 2388659, 3043147, 3363676, 3372008, 3310713, 3317366, 3409080, 3427548, 3688957, 3958926, 3789451, 3720735, 3794155, 3622331, 3514856, 3709272, 3636459, 3855648, 3653187, 3723924, 3675777, 3890468, 3635550, 3729174, 3698183, 4007424, 4021292, 4181253],I26R=[4136060, 5068672, 4569316, 4441509, 4700769, 4706781, 4436689, 4468535, 5027334, 5168369, 5489287, 4861434, 4500189, 4409200, 4354197, 4825262, 4094974, 4043879, 4397621, 4374131, 4315712, 4141257, 4267948, 4266796, 4227128, 3672202, 3538447, 3431060, 3607182, 3859467, 3760862, 3667515, 3584072, 3600157, 4178078, 3549600, 3670019, 3608177, 3795917, 3575010, 3712499, 3707771, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"],YOYR=[-57.7, -39.7, 3397.9, 214.9, -80.8, 42.9, 323.2, 74.3, 105.2, 70.2, 29.2, 2283.0, 108.2, 89.0, 69.6, 92.6, 597.6, 22.4, 66.4, 24.2, 289.2, -33.8, -29.6, -36.3, -34.5, 490.4, -2.3, 61.9, -50.3, -86.3, 105.6, -0.5, -1.2, -81.6, -34.5, 296.2, -57.7, -50.2, -17.7, 729.3, 201.6, -94.0, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"],LAST_WK=42;
@@ -207,6 +231,7 @@ const ANNUAL={"2023":1310788,"2024":7147157,"2025":8704355,"2026 YTW":11152307};
 const ANNUAL_USD={"2023":1513817,"2024":9621797,"2025":12307150,"2026 YTW":12948405};
 const S26=S26R.map(v=>v==="null"?null:v),I26=I26R.map(v=>v==="null"?null:v),YOYP=YOYR.map(v=>v==="null"?null:v);
 const SU26=SU26R.map(v=>v==="null"?null:v),YOYUP=YOYUR.map(v=>v==="null"?null:v);
+const COST_HISTORY=[{"date": "2025-12-29", "avgCost": 0.896689, "markupPct": 0.558255}, {"date": "2026-01-05", "avgCost": 0.896689, "markupPct": 0.558255}, {"date": "2026-01-12", "avgCost": 0.83808, "markupPct": 0.545593}, {"date": "2026-01-19", "avgCost": 0.965628, "markupPct": 0.560353}, {"date": "2026-01-26", "avgCost": 1.023287, "markupPct": 0.541099}, {"date": "2026-02-02", "avgCost": 0.985974, "markupPct": 0.590173}, {"date": "2026-02-09", "avgCost": 0.999355, "markupPct": 0.559156}, {"date": "2026-02-16", "avgCost": 1.008862, "markupPct": 0.551198}, {"date": "2026-02-25", "avgCost": 0.95068, "markupPct": 0.492036}, {"date": "2026-03-02", "avgCost": 0.936827, "markupPct": 0.493959}, {"date": "2026-03-09", "avgCost": 0.912923, "markupPct": 0.497437}, {"date": "2026-03-16", "avgCost": 0.877827, "markupPct": 0.492638}, {"date": "2026-03-23", "avgCost": 0.947002, "markupPct": 0.49011}, {"date": "2026-03-30", "avgCost": 0.975044, "markupPct": 0.490155}, {"date": "2026-04-06", "avgCost": 0.969481, "markupPct": 0.484903}, {"date": "2026-04-13", "avgCost": 0.951472, "markupPct": 0.500706}, {"date": "2026-04-20", "avgCost": 0.89761, "markupPct": 0.490245}, {"date": "2026-04-27", "avgCost": 0.970924, "markupPct": 0.501415}, {"date": "2026-05-04", "avgCost": 0.940126, "markupPct": 0.4771}, {"date": "2026-05-11", "avgCost": 0.970185, "markupPct": 0.488726}, {"date": "2026-05-18", "avgCost": 1.008863, "markupPct": 0.491203}, {"date": "2026-05-25", "avgCost": 1.025258, "markupPct": 0.489125}, {"date": "2026-06-01", "avgCost": 1.040795, "markupPct": 0.494514}, {"date": "2026-06-08", "avgCost": 1.033301, "markupPct": 0.495497}, {"date": "2026-06-15", "avgCost": 1.020253, "markupPct": 0.477623}, {"date": "2026-06-22", "avgCost": 0.911993, "markupPct": 0.583686}, {"date": "2026-06-29", "avgCost": 0.904751, "markupPct": 0.656684}, {"date": "2026-07-06", "avgCost": 0.897187, "markupPct": 0.758752}, {"date": "2026-07-13", "avgCost": 0.84551, "markupPct": 0.775495}, {"date": "2026-07-20", "avgCost": 0.814854, "markupPct": 0.778461}, {"date": "2026-07-27", "avgCost": 1.064974, "markupPct": 0.471952}, {"date": "2026-08-03", "avgCost": 1.1335, "markupPct": 0.448617}, {"date": "2026-08-10", "avgCost": 1.098203, "markupPct": 0.638168}, {"date": "2026-08-17", "avgCost": 1.096129, "markupPct": 0.449698}, {"date": "2026-08-24", "avgCost": 1.143419, "markupPct": 0.445079}, {"date": "2026-08-31", "avgCost": 1.054054, "markupPct": 0.445173}, {"date": "2026-10-12", "avgCost": 1.250622, "markupPct": 0.442494}];
 
 // Mode switching
 function setMode(mode,el){
@@ -214,6 +239,8 @@ function setMode(mode,el){
   el.classList.add('active');
   document.getElementById('units-section').style.display=mode==='units'?'block':'none';
   document.getElementById('price-section').style.display=mode==='price'?'block':'none';
+  document.getElementById('cost-section').style.display=mode==='cost'?'block':'none';
+  if(mode==='cost'&&!window._cti){initCostTrend();window._cti=true;}
 }
 
 // Units panel switching
@@ -268,6 +295,53 @@ function initYoYUSD(){
   var c2=document.getElementById('yoyBarChartUSD').getContext('2d');
   var yc=YOYUP.slice(0,LAST_WK).map(v=>v===null?'#BDC3C7':v>=0?'#27AE60':'#E74C3C');
   new Chart(c2,{type:'bar',data:{labels:LABELS.slice(0,LAST_WK),datasets:[{label:'YoY %',data:YOYUP.slice(0,LAST_WK),backgroundColor:yc,borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y!=null?(c.parsed.y>=0?' +':' ')+c.parsed.y+'%':' -'}}},scales:{x:{ticks:{font:{size:9}},grid:{display:false}},y:{ticks:{callback:v=>v+'%',font:{size:9}},grid:{color:'#F0F4F8'},title:{display:true,text:'YoY %',font:{size:9}}}}}});
+}
+
+// Cost Trend panel
+function showCTPanel(id,el){
+  document.querySelectorAll('#cost-section .panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#cost-section .nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');el.classList.add('active');
+}
+function initCostTrend(){
+  if(!COST_HISTORY||!COST_HISTORY.length)return;
+  var lbl=COST_HISTORY.map(r=>r.date);
+  var ac=COST_HISTORY.map(r=>+r.avgCost.toFixed(4));
+  var mp=COST_HISTORY.map(r=>+(r.markupPct*100).toFixed(2));
+  // KPI cards
+  var last=COST_HISTORY[COST_HISTORY.length-1];
+  document.getElementById('ct-cur-cost').textContent='$'+last.avgCost.toFixed(4);
+  document.getElementById('ct-cur-date').textContent=last.date;
+  document.getElementById('ct-cur-markup').textContent=(last.markupPct*100).toFixed(2)+'%';
+  var d2026=COST_HISTORY.filter(r=>r.date.startsWith('2026'));
+  var avgC=d2026.length?d2026.reduce((s,r)=>s+r.avgCost,0)/d2026.length:0;
+  var avgM=d2026.length?d2026.reduce((s,r)=>s+r.markupPct,0)/d2026.length:0;
+  document.getElementById('ct-avg-cost').textContent='$'+avgC.toFixed(4);
+  document.getElementById('ct-avg-markup').textContent=(avgM*100).toFixed(2)+'%';
+  // Chart
+  var ctx=document.getElementById('costTrendChart').getContext('2d');
+  new Chart(ctx,{
+    data:{labels:lbl,datasets:[
+      {type:'line',label:'Avg Cost ($/unit)',data:ac,borderColor:'#E74C3C',backgroundColor:'rgba(231,76,60,.07)',borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:.3,yAxisID:'y',fill:true},
+      {type:'line',label:'Markup%',data:mp,borderColor:'#8E44AD',backgroundColor:'transparent',borderWidth:2,pointRadius:2,pointHoverRadius:4,tension:.3,yAxisID:'y2',borderDash:[5,3]}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},
+        tooltip:{callbacks:{label:function(c){
+          if(c.dataset.yAxisID==='y')return' Avg Cost: $'+c.parsed.y.toFixed(4);
+          return' Markup: '+c.parsed.y.toFixed(2)+'%';
+        }}}
+      },
+      scales:{
+        x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},
+        y:{position:'left',title:{display:true,text:'Avg Cost ($/unit)',font:{size:10}},ticks:{callback:function(v){return'$'+v.toFixed(2)},font:{size:9}},grid:{color:'#E8ECEF'}},
+        y2:{position:'right',title:{display:true,text:'Markup%',font:{size:10}},ticks:{callback:function(v){return v+'%'},font:{size:9}},grid:{drawOnChartArea:false}}
+      }
+    }
+  });
 }
 
 // Table — Units
