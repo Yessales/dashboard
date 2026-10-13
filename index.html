@@ -232,6 +232,7 @@ const ANNUAL_USD={"2023":1513817,"2024":9621797,"2025":12307150,"2026 YTW":12948
 const S26=S26R.map(v=>v==="null"?null:v),I26=I26R.map(v=>v==="null"?null:v),YOYP=YOYR.map(v=>v==="null"?null:v);
 const SU26=SU26R.map(v=>v==="null"?null:v),YOYUP=YOYUR.map(v=>v==="null"?null:v);
 const COST_HISTORY=[{"date": "2025-12-29", "avgCost": 0.896689, "markupPct": 0.558255}, {"date": "2026-01-05", "avgCost": 0.896689, "markupPct": 0.558255}, {"date": "2026-01-12", "avgCost": 0.83808, "markupPct": 0.545593}, {"date": "2026-01-19", "avgCost": 0.965628, "markupPct": 0.560353}, {"date": "2026-01-26", "avgCost": 1.023287, "markupPct": 0.541099}, {"date": "2026-02-02", "avgCost": 0.985974, "markupPct": 0.590173}, {"date": "2026-02-09", "avgCost": 0.999355, "markupPct": 0.559156}, {"date": "2026-02-16", "avgCost": 1.008862, "markupPct": 0.551198}, {"date": "2026-02-25", "avgCost": 0.95068, "markupPct": 0.492036}, {"date": "2026-03-02", "avgCost": 0.936827, "markupPct": 0.493959}, {"date": "2026-03-09", "avgCost": 0.912923, "markupPct": 0.497437}, {"date": "2026-03-16", "avgCost": 0.877827, "markupPct": 0.492638}, {"date": "2026-03-23", "avgCost": 0.947002, "markupPct": 0.49011}, {"date": "2026-03-30", "avgCost": 0.975044, "markupPct": 0.490155}, {"date": "2026-04-06", "avgCost": 0.969481, "markupPct": 0.484903}, {"date": "2026-04-13", "avgCost": 0.951472, "markupPct": 0.500706}, {"date": "2026-04-20", "avgCost": 0.89761, "markupPct": 0.490245}, {"date": "2026-04-27", "avgCost": 0.970924, "markupPct": 0.501415}, {"date": "2026-05-04", "avgCost": 0.940126, "markupPct": 0.4771}, {"date": "2026-05-11", "avgCost": 0.970185, "markupPct": 0.488726}, {"date": "2026-05-18", "avgCost": 1.008863, "markupPct": 0.491203}, {"date": "2026-05-25", "avgCost": 1.025258, "markupPct": 0.489125}, {"date": "2026-06-01", "avgCost": 1.040795, "markupPct": 0.494514}, {"date": "2026-06-08", "avgCost": 1.033301, "markupPct": 0.495497}, {"date": "2026-06-15", "avgCost": 1.020253, "markupPct": 0.477623}, {"date": "2026-06-22", "avgCost": 0.911993, "markupPct": 0.583686}, {"date": "2026-06-29", "avgCost": 0.904751, "markupPct": 0.656684}, {"date": "2026-07-06", "avgCost": 0.897187, "markupPct": 0.758752}, {"date": "2026-07-13", "avgCost": 0.84551, "markupPct": 0.775495}, {"date": "2026-07-20", "avgCost": 0.814854, "markupPct": 0.778461}, {"date": "2026-07-27", "avgCost": 1.064974, "markupPct": 0.471952}, {"date": "2026-08-03", "avgCost": 1.1335, "markupPct": 0.448617}, {"date": "2026-08-10", "avgCost": 1.098203, "markupPct": 0.638168}, {"date": "2026-08-17", "avgCost": 1.096129, "markupPct": 0.449698}, {"date": "2026-08-24", "avgCost": 1.143419, "markupPct": 0.445079}, {"date": "2026-08-31", "avgCost": 1.054054, "markupPct": 0.445173}, {"date": "2026-10-12", "avgCost": 1.250622, "markupPct": 0.442494}];
+const CT25C=[0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9],CT25M=[55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83, 55.83],CT26C=[0.9, 0.84, 0.97, 1.02, 0.99, 1.0, 1.01, 0.95, 0.94, 0.91, 0.88, 0.95, 0.98, 0.97, 0.95, 0.9, 0.97, 0.94, 0.97, 1.01, 1.03, 1.04, 1.03, 1.02, 0.91, 0.9, 0.9, 0.85, 0.81, 1.06, 1.13, 1.1, 1.1, 1.14, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25],CT26M=[55.83, 54.56, 56.04, 54.11, 59.02, 55.92, 55.12, 49.2, 49.4, 49.74, 49.26, 49.01, 49.02, 48.49, 50.07, 49.02, 50.14, 47.71, 48.87, 49.12, 48.91, 49.45, 49.55, 47.76, 58.37, 65.67, 75.88, 77.55, 77.85, 47.2, 44.86, 63.82, 44.97, 44.51, 44.52, 44.52, 44.52, 44.52, 44.52, 44.52, 44.25, 44.25, 44.25, 44.25, 44.25, 44.25, 44.25, 44.25, 44.25, 44.25, 44.25, 44.25];
 
 // Mode switching
 function setMode(mode,el){
@@ -305,25 +306,25 @@ function showCTPanel(id,el){
 }
 function initCostTrend(){
   if(!COST_HISTORY||!COST_HISTORY.length)return;
-  var lbl=COST_HISTORY.map(r=>r.date);
-  var ac=COST_HISTORY.map(r=>+r.avgCost.toFixed(4));
-  var mp=COST_HISTORY.map(r=>+(r.markupPct*100).toFixed(2));
-  // KPI cards
+  // KPI cards from raw history
   var last=COST_HISTORY[COST_HISTORY.length-1];
-  document.getElementById('ct-cur-cost').textContent='$'+last.avgCost.toFixed(4);
+  document.getElementById('ct-cur-cost').textContent='$'+last.avgCost.toFixed(2);
   document.getElementById('ct-cur-date').textContent=last.date;
   document.getElementById('ct-cur-markup').textContent=(last.markupPct*100).toFixed(2)+'%';
   var d2026=COST_HISTORY.filter(r=>r.date.startsWith('2026'));
   var avgC=d2026.length?d2026.reduce((s,r)=>s+r.avgCost,0)/d2026.length:0;
   var avgM=d2026.length?d2026.reduce((s,r)=>s+r.markupPct,0)/d2026.length:0;
-  document.getElementById('ct-avg-cost').textContent='$'+avgC.toFixed(4);
+  document.getElementById('ct-avg-cost').textContent='$'+avgC.toFixed(2);
   document.getElementById('ct-avg-markup').textContent=(avgM*100).toFixed(2)+'%';
-  // Chart
+  // WK01-WK52 labels
+  var lbl=Array.from({length:52},(_,i)=>'WK'+(i+1<10?'0':'')+(i+1));
   var ctx=document.getElementById('costTrendChart').getContext('2d');
   new Chart(ctx,{
     data:{labels:lbl,datasets:[
-      {type:'line',label:'Avg Cost ($/unit)',data:ac,borderColor:'#E74C3C',backgroundColor:'rgba(231,76,60,.07)',borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:.3,yAxisID:'y',fill:true},
-      {type:'line',label:'Markup%',data:mp,borderColor:'#8E44AD',backgroundColor:'transparent',borderWidth:2,pointRadius:2,pointHoverRadius:4,tension:.3,yAxisID:'y2',borderDash:[5,3]}
+      {type:'line',label:'2025 Avg Cost',data:CT25C,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.06)',borderWidth:2,pointRadius:0,tension:.3,yAxisID:'y',fill:false,borderDash:[4,3]},
+      {type:'line',label:'2026 Avg Cost',data:CT26C,borderColor:'#E74C3C',backgroundColor:'rgba(231,76,60,.07)',borderWidth:2.5,pointRadius:2,tension:.3,yAxisID:'y',fill:true},
+      {type:'line',label:'2025 Markup%',data:CT25M,borderColor:'#F0B27A',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:.3,yAxisID:'y2',borderDash:[4,3]},
+      {type:'line',label:'2026 Markup%',data:CT26M,borderColor:'#8E44AD',backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.3,yAxisID:'y2'}
     ]},
     options:{
       responsive:true,maintainAspectRatio:false,
@@ -331,14 +332,15 @@ function initCostTrend(){
       plugins:{
         legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:20}},
         tooltip:{callbacks:{label:function(c){
-          if(c.dataset.yAxisID==='y')return' Avg Cost: $'+c.parsed.y.toFixed(4);
-          return' Markup: '+c.parsed.y.toFixed(2)+'%';
+          if(c.parsed.y==null)return null;
+          if(c.dataset.yAxisID==='y')return' '+c.dataset.label+': $'+c.parsed.y.toFixed(2);
+          return' '+c.dataset.label+': '+c.parsed.y.toFixed(2)+'%';
         }}}
       },
       scales:{
         x:{ticks:{maxRotation:90,font:{size:9}},grid:{color:'#F0F4F8'}},
         y:{position:'left',title:{display:true,text:'Avg Cost ($/unit)',font:{size:10}},ticks:{callback:function(v){return'$'+v.toFixed(2)},font:{size:9}},grid:{color:'#E8ECEF'}},
-        y2:{position:'right',title:{display:true,text:'Markup%',font:{size:10}},ticks:{callback:function(v){return v+'%'},font:{size:9}},grid:{drawOnChartArea:false}}
+        y2:{position:'right',title:{display:true,text:'Markup%',font:{size:10}},ticks:{callback:function(v){return v.toFixed(1)+'%'},font:{size:9}},grid:{drawOnChartArea:false}}
       }
     }
   });
