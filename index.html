@@ -322,7 +322,7 @@ function initCostTrend(){
   new Chart(ctx,{
     data:{labels:lbl,datasets:[
       {type:'line',label:'2025 Avg Cost',data:CT25C,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.06)',borderWidth:2,pointRadius:0,tension:.3,yAxisID:'y',fill:false,borderDash:[4,3]},
-      {type:'line',label:'2026 Avg Cost',data:CT26C,borderColor:'#E74C3C',backgroundColor:'rgba(231,76,60,.07)',borderWidth:2.5,pointRadius:2,tension:.3,yAxisID:'y',fill:true,spanGaps:false},
+      {type:'line',label:'2026 Avg Cost',data:CT26C,borderColor:'#E74C3C',backgroundColor:'rgba(231,76,60,.07)',borderWidth:2.5,pointRadius:2,tension:.3,yAxisID:'y',fill:false,spanGaps:false},
       {type:'line',label:'2025 Markup%',data:CT25M,borderColor:'#F0B27A',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:.3,yAxisID:'y2',borderDash:[4,3]},
       {type:'line',label:'2026 Markup%',data:CT26M,borderColor:'#8E44AD',backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.3,yAxisID:'y2',spanGaps:false}
     ]},
