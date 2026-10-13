@@ -316,15 +316,15 @@ function initCostTrend(){
   var avgM=d2026.length?d2026.reduce((s,r)=>s+r.markupPct,0)/d2026.length:0;
   document.getElementById('ct-avg-cost').textContent='$'+avgC.toFixed(2);
   document.getElementById('ct-avg-markup').textContent=(avgM*100).toFixed(2)+'%';
-  // WK01-LAST_WK labels only (don't show future weeks)
-  var lbl=Array.from({length:LAST_WK},(_,i)=>'WK'+(i+1<10?'0':'')+(i+1));
+  // WK01-WK52 labels; 2026 arrays have null for future weeks — spanGaps:false won't draw them
+  var lbl=Array.from({length:52},(_,i)=>'WK'+(i+1<10?'0':'')+(i+1));
   var ctx=document.getElementById('costTrendChart').getContext('2d');
   new Chart(ctx,{
     data:{labels:lbl,datasets:[
-      {type:'line',label:'2025 Avg Cost',data:CT25C.slice(0,LAST_WK),borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.06)',borderWidth:2,pointRadius:0,tension:.3,yAxisID:'y',fill:false,borderDash:[4,3]},
-      {type:'line',label:'2026 Avg Cost',data:CT26C.slice(0,LAST_WK),borderColor:'#E74C3C',backgroundColor:'rgba(231,76,60,.07)',borderWidth:2.5,pointRadius:2,tension:.3,yAxisID:'y',fill:false,spanGaps:false},
-      {type:'line',label:'2025 Markup%',data:CT25M.slice(0,LAST_WK),borderColor:'#F0B27A',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:.3,yAxisID:'y2',borderDash:[4,3]},
-      {type:'line',label:'2026 Markup%',data:CT26M.slice(0,LAST_WK),borderColor:'#8E44AD',backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.3,yAxisID:'y2',spanGaps:false}
+      {type:'line',label:'2025 Avg Cost',data:CT25C,borderColor:'#F39C12',backgroundColor:'rgba(243,156,18,.06)',borderWidth:2,pointRadius:0,tension:.3,yAxisID:'y',fill:false,borderDash:[4,3]},
+      {type:'line',label:'2026 Avg Cost',data:CT26C,borderColor:'#E74C3C',backgroundColor:'rgba(231,76,60,.07)',borderWidth:2.5,pointRadius:2,tension:.3,yAxisID:'y',fill:false,spanGaps:false},
+      {type:'line',label:'2025 Markup%',data:CT25M,borderColor:'#F0B27A',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:.3,yAxisID:'y2',borderDash:[4,3]},
+      {type:'line',label:'2026 Markup%',data:CT26M,borderColor:'#8E44AD',backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.3,yAxisID:'y2',spanGaps:false}
     ]},
     options:{
       responsive:true,maintainAspectRatio:false,
