@@ -230,19 +230,22 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </div>
 <div id="panel-ptwmain" class="panel" style="padding-top:16px">
   <div class="kpi-row">
-    <div class="kpi"><label>Latest Avg Cost</label><div class="val" id="ctw-cur-cost">-</div><div class="note" id="ctw-cur-wk">-</div></div>
-    <div class="kpi blue"><label>Latest Avg Price</label><div class="val" id="ctw-cur-price">-</div><div class="note">Sales-weighted avg price</div></div>
-    <div class="kpi purple"><label>Latest Markup%</label><div class="val" id="ctw-cur-markup">-</div><div class="note">2026 latest week</div></div>
-    <div class="kpi orange"><label>2026 Avg Cost</label><div class="val" id="ctw-avg-cost">-</div><div class="note">2026 weekly average</div></div>
-    <div class="kpi green"><label>2026 Avg Price</label><div class="val" id="ctw-avg-price">-</div><div class="note">2026 weekly average</div></div>
-    <div class="kpi red"><label>2026 Avg Markup%</label><div class="val" id="ctw-avg-markup">-</div><div class="note">2026 weekly average</div></div>
+    <div class="kpi orange"><label>2025 Avg Cost</label><div class="val" id="ctw-avg-cost25">-</div><div class="note">2025 weekly average</div></div>
+    <div class="kpi green"><label>2025 Avg Price</label><div class="val" id="ctw-avg-price25">-</div><div class="note">2025 weekly average</div></div>
+    <div class="kpi" style="border-left:4px solid #F0B27A"><label>2025 Avg Markup%</label><div class="val" id="ctw-avg-markup25">-</div><div class="note">2025 weekly average</div></div>
+    <div class="kpi"><label>2026 Avg Cost</label><div class="val" id="ctw-avg-cost">-</div><div class="note" id="ctw-cur-wk">-</div></div>
+    <div class="kpi blue"><label>2026 Avg Price</label><div class="val" id="ctw-avg-price">-</div><div class="note">2026 weekly average</div></div>
+    <div class="kpi purple"><label>2026 Avg Markup%</label><div class="val" id="ctw-avg-markup">-</div><div class="note">2026 weekly average</div></div>
   </div>
   <div class="card">
-    <h2>&#128197; Weekly Avg Cost, Price &amp; Markup% (2026 by Week)</h2>
+    <h2>&#128197; Weekly Avg Cost, Price &amp; Markup% (2025 vs 2026 by Week)</h2>
     <div class="leg">
-      <span><span class="ls" style="background:#E74C3C"></span>Avg Cost (left)</span>
-      <span><span class="ls" style="background:#1A8CFF"></span>Avg Price (left)</span>
-      <span><span class="ls" style="background:#8E44AD"></span>Markup% (right)</span>
+      <span><span class="ls" style="background:#F39C12;border-top:2px dashed #F39C12"></span>2025 Avg Cost (left)</span>
+      <span><span class="ls" style="background:#E74C3C"></span>2026 Avg Cost (left)</span>
+      <span><span class="ls" style="background:#2471A3;border-top:2px dashed #2471A3"></span>2025 Avg Price (left)</span>
+      <span><span class="ls" style="background:#1A8CFF"></span>2026 Avg Price (left)</span>
+      <span><span class="ls" style="background:#F0B27A;border-top:2px dashed #F0B27A"></span>2025 Markup% (right)</span>
+      <span><span class="ls" style="background:#8E44AD"></span>2026 Markup% (right)</span>
     </div>
     <div class="chart-wrap tall"><canvas id="costTrendWeekChart"></canvas></div>
   </div>
@@ -261,6 +264,7 @@ const COST_HISTORY=[{"date": "2025-12-15", "avgCost": 1.031211, "avgPrice": 1.44
 const CT25C=[1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.08, 0.9],CT25M=[56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 56.02, 54.65, 55.83],CT25P=[1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.44, 1.46];
 const CT26C=[null, 0.66, 0.69, 0.6, 0.68, 0.62, 0.63, 0.59, 0.69, 0.68, 0.67, 0.65, 0.63, 0.68, 0.69, 0.67, 0.65, 0.61, 0.67, 0.62, 0.62, 0.61, 0.61, 0.61, 0.62, 0.63, 0.6, 0.77, 0.77, 0.75, 0.65, 0.67, 0.66, 0.66, 0.66, 0.67, 0.64, 0.64, 0.65, 0.66, 0.65, 0.66, 0.66, null, null, null, null, null, null, null, null, null],CT26M=[null, 50.21, 50.3, 50.35, 50.41, 51.15, 50.99, 49.05, 48.79, 48.53, 48.87, 48.29, 47.97, 47.92, 47.62, 48.61, 48.17, 48.77, 47.21, 48.28, 48.44, 48.26, 48.5, 48.99, 47.23, 46.92, 46.69, 49.92, 50.4, 49.93, 44.92, 44.77, 44.84, 44.79, 44.46, 44.47, 44.29, 43.91, 43.73, 43.55, 43.93, 43.48, 43.58, null, null, null, null, null, null, null, null, null],CT26P=[null, 1.49, 1.5, 1.35, 1.48, 1.51, 1.41, 1.31, 1.35, 1.34, 1.33, 1.28, 1.23, 1.32, 1.32, 1.34, 1.26, 1.21, 1.28, 1.22, 1.22, 1.2, 1.22, 1.2, 1.18, 1.18, 1.14, 1.6, 1.59, 1.55, 1.24, 1.21, 1.2, 1.2, 1.2, 1.21, 1.17, 1.16, 1.16, 1.18, 1.18, 1.18, 1.18, null, null, null, null, null, null, null, null, null];
 const WK_LABELS=["WK01", "WK02", "WK03", "WK04", "WK05", "WK06", "WK07", "WK08", "WK09", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33", "WK34", "WK35", "WK36", "WK37", "WK38", "WK39", "WK40", "WK41", "WK42", "WK43"],WK_COST=[1.4114, 1.0442, 0.3657, 0.3393, 1.35, 0.8891, 0.5231, 0.6358, 1.2228, 1.0069, 0.9954, 0.4569, 0.1564, 0.9159, 1.2972, 1.1503, 0.4489, 0.6515, 1.1484, 1.1157, 0.263, 0.8369, 1.007, 1.1807, 1.171, 0.3509, 0.6539, 1.0647, 1.2583, 1.2402, 0.6609, 0.6224, 0.8699, 1.0007, 1.0367, 0.3435, 1.1315, 1.1114, 1.4447, 0.6254, 0.9738, 1.0715, 1.603],WK_PRICE=[2.5379, 2.1234, 0.6593, 0.5623, 2.4542, 1.7967, 0.831, 0.9853, 2.1835, 1.7937, 2.0862, 0.8226, 0.2235, 1.7187, 2.257, 2.2131, 0.665, 1.1665, 2.0948, 1.8725, 0.4654, 1.479, 2.1154, 2.0041, 2.162, 0.5676, 1.0553, 2.0142, 2.3043, 2.008, 1.1279, 1.1785, 1.6791, 1.7416, 2.2288, 0.7376, 2.0222, 1.8458, 1.8844, 1.1995, 1.9423, 2.3243, 2.1479],WK_MKP=[44.38, 50.82, 44.53, 39.66, 44.99, 50.51, 37.06, 35.47, 44.0, 43.86, 52.29, 44.45, 30.03, 46.71, 42.52, 48.02, 32.49, 44.15, 45.18, 40.42, 43.49, 43.41, 52.4, 41.09, 45.84, 38.18, 38.04, 47.14, 45.39, 38.23, 41.41, 47.18, 48.19, 42.54, 53.49, 53.43, 44.05, 39.79, 23.33, 47.86, 49.87, 53.9, 25.37];
+const WK25_COST=[0.9525, 0.8432, 0.7992, 0.7076, 0.5179, 0.9109, 1.0879, 1.1111, 0.8576, 1.1068, 1.1449, 1.1122, 0.3617, 0.6552, 0.897, 0.9376, 0.5508, 0.66, 0.9306, 0.9951, 0.8019, 0.6192, 0.7649, 1.1053, 0.6977, 1.15, 1.1175, 1.46, 0.8719, 0.3218, 1.1758, 1.0768, 1.1225, 0.5899, 0.7324, 1.3003, 1.0187, 0.4535, 0.5584, 1.2379, 1.0816, 1.5289, 0.3293],WK25_PRICE=[1.8083, 1.9087, 1.6789, 1.235, 0.8302, 2.0347, 2.3012, 2.1364, 1.8714, 1.9813, 2.0019, 1.8728, 0.6511, 1.3992, 0.9354, 1.7752, 0.9018, 1.2288, 2.0407, 2.0919, 1.7017, 0.9764, 1.5268, 2.2221, 1.3176, 2.5318, 2.3501, 2.1023, 2.1766, 0.5202, 2.4848, 2.1457, 2.343, 1.1687, 1.4309, 2.4575, 2.3312, 0.8497, 0.8908, 2.4574, 2.4534, 2.5802, 0.6588],WK25_MKP=[47.33, 55.82, 52.4, 42.71, 37.61, 55.23, 52.73, 47.99, 54.17, 44.14, 42.81, 40.61, 44.44, 53.18, 4.1, 47.18, 38.92, 46.29, 54.4, 52.43, 52.87, 36.58, 49.9, 50.26, 47.05, 54.58, 52.45, 30.55, 59.94, 38.15, 52.68, 49.81, 52.09, 49.52, 48.81, 47.09, 56.3, 46.63, 37.31, 49.63, 55.91, 40.74, 50.01];
 
 // Mode switching
 function setMode(mode,el){
@@ -383,24 +387,28 @@ function initPricingTrend(){
 
 function initPricingWeek(){
   if(!WK_LABELS||!WK_LABELS.length)return;
+  var avg=a=>{var v=a.filter(x=>x!=null);return v.length?v.reduce((s,x)=>s+x,0)/v.length:null;};
+  // 2026 KPIs
   var last=WK_LABELS.length-1;
-  var lc=WK_COST[last],lp=WK_PRICE[last],lm=WK_MKP[last];
-  document.getElementById('ctw-cur-wk').textContent=WK_LABELS[last];
-  if(lc!=null)document.getElementById('ctw-cur-cost').textContent='$'+lc.toFixed(2);
-  if(lp!=null)document.getElementById('ctw-cur-price').textContent='$'+lp.toFixed(2);
-  if(lm!=null)document.getElementById('ctw-cur-markup').textContent=lm.toFixed(2)+'%';
-  var vc=WK_COST.filter(v=>v!=null),vp=WK_PRICE.filter(v=>v!=null),vm=WK_MKP.filter(v=>v!=null);
-  var avg=a=>a.length?a.reduce((s,v)=>s+v,0)/a.length:null;
-  var ac=avg(vc),ap=avg(vp),am=avg(vm);
-  if(ac!=null)document.getElementById('ctw-avg-cost').textContent='$'+ac.toFixed(2);
-  if(ap!=null)document.getElementById('ctw-avg-price').textContent='$'+ap.toFixed(2);
-  if(am!=null)document.getElementById('ctw-avg-markup').textContent=am.toFixed(2)+'%';
+  document.getElementById('ctw-cur-wk').textContent='Latest: '+WK_LABELS[last];
+  var ac26=avg(WK_COST),ap26=avg(WK_PRICE),am26=avg(WK_MKP);
+  if(ac26!=null)document.getElementById('ctw-avg-cost').textContent='$'+ac26.toFixed(2);
+  if(ap26!=null)document.getElementById('ctw-avg-price').textContent='$'+ap26.toFixed(2);
+  if(am26!=null)document.getElementById('ctw-avg-markup').textContent=am26.toFixed(2)+'%';
+  // 2025 KPIs
+  var ac25=avg(WK25_COST),ap25=avg(WK25_PRICE),am25=avg(WK25_MKP);
+  if(ac25!=null)document.getElementById('ctw-avg-cost25').textContent='$'+ac25.toFixed(2);
+  if(ap25!=null)document.getElementById('ctw-avg-price25').textContent='$'+ap25.toFixed(2);
+  if(am25!=null)document.getElementById('ctw-avg-markup25').textContent=am25.toFixed(2)+'%';
   var ctx=document.getElementById('costTrendWeekChart').getContext('2d');
   new Chart(ctx,{
     data:{labels:WK_LABELS,datasets:[
-      {type:'line',label:'Avg Cost',data:WK_COST,borderColor:'#E74C3C',backgroundColor:'rgba(231,76,60,.08)',borderWidth:2.5,pointRadius:3,tension:.3,yAxisID:'y',fill:true,spanGaps:false},
-      {type:'line',label:'Avg Price',data:WK_PRICE,borderColor:'#1A8CFF',backgroundColor:'rgba(26,140,255,.05)',borderWidth:2.5,pointRadius:3,tension:.3,yAxisID:'y',fill:true,spanGaps:false},
-      {type:'line',label:'Markup%',data:WK_MKP,borderColor:'#8E44AD',backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.3,yAxisID:'y2',fill:false,spanGaps:false}
+      {type:'line',label:'2025 Avg Cost',data:WK25_COST,borderColor:'#F39C12',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:.3,yAxisID:'y',fill:false,borderDash:[4,3],spanGaps:false},
+      {type:'line',label:'2026 Avg Cost',data:WK_COST,borderColor:'#E74C3C',backgroundColor:'transparent',borderWidth:2.5,pointRadius:2,tension:.3,yAxisID:'y',fill:false,spanGaps:false},
+      {type:'line',label:'2025 Avg Price',data:WK25_PRICE,borderColor:'#2471A3',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:.3,yAxisID:'y',fill:false,borderDash:[4,3],spanGaps:false},
+      {type:'line',label:'2026 Avg Price',data:WK_PRICE,borderColor:'#1A8CFF',backgroundColor:'transparent',borderWidth:2.5,pointRadius:2,tension:.3,yAxisID:'y',fill:false,spanGaps:false},
+      {type:'line',label:'2025 Markup%',data:WK25_MKP,borderColor:'#F0B27A',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:.3,yAxisID:'y2',fill:false,borderDash:[4,3],spanGaps:false},
+      {type:'line',label:'2026 Markup%',data:WK_MKP,borderColor:'#8E44AD',backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.3,yAxisID:'y2',fill:false,spanGaps:false}
     ]},
     options:{
       responsive:true,maintainAspectRatio:false,
