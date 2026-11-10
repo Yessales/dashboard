@@ -934,6 +934,30 @@ function buildContext(){
   return ctx;
 }
 var _aiHistory=[];
+var _aiMsgs=[];// {cls,html} for display
+var _AI_STORE='yes_ai_history';
+var _AI_TTL=7*24*60*60*1000;// 1 week
+function _aiSave(){
+  try{localStorage.setItem(_AI_STORE,JSON.stringify({ts:Date.now(),history:_aiHistory,msgs:_aiMsgs}));}catch(e){}
+}
+function _aiLoad(){
+  try{
+    var raw=localStorage.getItem(_AI_STORE);
+    if(!raw)return;
+    var obj=JSON.parse(raw);
+    if(Date.now()-obj.ts>_AI_TTL){localStorage.removeItem(_AI_STORE);return;}
+    _aiHistory=obj.history||[];
+    _aiMsgs=obj.msgs||[];
+    var box=document.getElementById('ai-messages');
+    _aiMsgs.forEach(function(m){
+      var div=document.createElement('div');
+      div.className='ai-msg '+m.cls;
+      div.innerHTML=m.html;
+      box.appendChild(div);
+    });
+    box.scrollTop=99999;
+  }catch(e){}
+}
 function appendMsg(cls,html){
   var div=document.createElement('div');
   div.className='ai-msg '+cls;
@@ -947,6 +971,7 @@ function sendAiMsg(){
   var q=inp.value.trim();
   if(!q)return;
   inp.value='';
+  _aiMsgs.push({cls:'ai-user',html:q.replace(/</g,'&lt;')});
   appendMsg('ai-user',q.replace(/</g,'&lt;'));
   var thinking=appendMsg('ai-bot','<i style="color:#AAA">생각 중...</i>');
   _aiHistory.push({role:'user',content:q});
@@ -961,17 +986,22 @@ function sendAiMsg(){
     if(data.error){thinking.className='ai-msg ai-err';thinking.innerHTML='&#9888; '+data.error.message;return;}
     var ans=data.choices[0].message.content;
     _aiHistory.push({role:'assistant',content:ans});
+    var html=ans.replace(/</g,'&lt;').replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
     thinking.className='ai-msg ai-bot';
-    thinking.innerHTML=ans.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    thinking.innerHTML=html;
+    _aiMsgs.push({cls:'ai-bot',html:html});
+    _aiSave();
   }).catch(function(e){
     thinking.className='ai-msg ai-err';
     thinking.innerHTML='&#9888; API 오류: '+e.message;
   });
 }
+// Load history after password is accepted (called from show())
+function _aiInit(){_aiLoad();}
 </script>
 
 <script>
-(function(){var P="1103";var PP="CEO1103";function show(pv){document.getElementById('_pw').style.display='none';document.getElementById('_app').style.display='block';if(!pv){document.getElementById('mode-price').style.display='none';document.getElementById('mode-cost').style.display='none';document.getElementById('ai-fab').style.display='none';}}if(!P&&!PP){show(true);return;}document.getElementById('_pb').onclick=function(){var val=document.getElementById('_pi').value;if(PP&&val===PP){show(true);}else if(P&&val===P){show(false);}else{document.getElementById('_pe').textContent='Wrong password. Try again.';document.getElementById('_pi').value='';document.getElementById('_pi').focus();}};document.getElementById('_pi').onkeydown=function(e){if(e.keyCode===13)document.getElementById('_pb').click();};})();
+(function(){var P="1103";var PP="CEO1103";function show(pv){document.getElementById('_pw').style.display='none';document.getElementById('_app').style.display='block';if(!pv){document.getElementById('mode-price').style.display='none';document.getElementById('mode-cost').style.display='none';document.getElementById('ai-fab').style.display='none';}else{setTimeout(_aiInit,100);}}if(!P&&!PP){show(true);return;}document.getElementById('_pb').onclick=function(){var val=document.getElementById('_pi').value;if(PP&&val===PP){show(true);}else if(P&&val===P){show(false);}else{document.getElementById('_pe').textContent='Wrong password. Try again.';document.getElementById('_pi').value='';document.getElementById('_pi').focus();}};document.getElementById('_pi').onkeydown=function(e){if(e.keyCode===13)document.getElementById('_pb').click();};})();
 </script>
 </div>
 </body></html>
