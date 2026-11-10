@@ -284,21 +284,61 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
   </div>
 </div>
 <div id="panel-q3qtrend" class="panel active">
-  <div class="card"><h2>&#128200; Q1 / Q2 / Q3 — Total Sales USD (2023-2026)</h2><div class="chart-wrap tall"><canvas id="qt_usd"></canvas></div></div>
-  <div class="card"><h2>&#128230; Q1 / Q2 / Q3 — Total Sales Units (2023-2026)</h2><div class="chart-wrap tall"><canvas id="qt_units"></canvas></div></div>
-  <div class="card"><h2>&#127758; Q1 / Q2 / Q3 — Country USD (2023-2026)</h2>
+  <div class="card"><h2>&#128200; Q1 / Q2 / Q3 — Total Sales (2023-2026)</h2>
     <div style="display:flex;gap:6px;margin-bottom:8px">
-      <button class="fbtn active" id="qt-usd-btn" onclick="setQtCountryMode('usd',this)">USD</button>
-      <button class="fbtn" id="qt-units-btn" onclick="setQtCountryMode('units',this)">Units</button>
+      <button class="fbtn active" id="qt-total-usd-btn" onclick="setQtTotalMode('usd',this)">USD</button>
+      <button class="fbtn" id="qt-total-units-btn" onclick="setQtTotalMode('units',this)">Units</button>
+    </div>
+    <div class="chart-wrap tall"><canvas id="qt_total"></canvas></div>
+  </div>
+  <div class="card"><h2>&#127758; Country (2023-2026)</h2>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <button class="fbtn active" id="qt-country-usd-btn" onclick="setQtCountryMode('usd',this)">USD</button>
+      <button class="fbtn" id="qt-country-units-btn" onclick="setQtCountryMode('units',this)">Units</button>
     </div>
     <div class="chart-wrap tall"><canvas id="qt_country"></canvas></div>
   </div>
-  <div class="card"><h2>&#128230; Q1 / Q2 / Q3 — Category (ILG1) USD (2023-2026)</h2>
+  <div class="card"><h2>&#127970; Tier (2023-2026)</h2>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <button class="fbtn active" id="qt-tier-usd-btn" onclick="setQtTierMode('usd',this)">USD</button>
+      <button class="fbtn" id="qt-tier-units-btn" onclick="setQtTierMode('units',this)">Units</button>
+    </div>
+    <div class="chart-wrap tall"><canvas id="qt_tier"></canvas></div>
+  </div>
+  <div class="card"><h2>&#127991; Brand (2023-2026)</h2>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <button class="fbtn active" id="qt-brand-usd-btn" onclick="setQtBrandMode('usd',this)">USD</button>
+      <button class="fbtn" id="qt-brand-units-btn" onclick="setQtBrandMode('units',this)">Units</button>
+    </div>
+    <div class="chart-wrap tall"><canvas id="qt_brand"></canvas></div>
+  </div>
+  <div class="card"><h2>&#128722; Retailer (2023-2026)</h2>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <button class="fbtn active" id="qt-retailer-usd-btn" onclick="setQtRetailerMode('usd',this)">USD</button>
+      <button class="fbtn" id="qt-retailer-units-btn" onclick="setQtRetailerMode('units',this)">Units</button>
+    </div>
+    <div class="chart-wrap tall"><canvas id="qt_retailer"></canvas></div>
+  </div>
+  <div class="card"><h2>&#128230; Category (ILG1) (2023-2026)</h2>
     <div style="display:flex;gap:6px;margin-bottom:8px">
       <button class="fbtn active" id="qt-cat-usd-btn" onclick="setQtCatMode('usd',this)">USD</button>
       <button class="fbtn" id="qt-cat-units-btn" onclick="setQtCatMode('units',this)">Units</button>
     </div>
     <div class="chart-wrap tall"><canvas id="qt_cat"></canvas></div>
+  </div>
+  <div class="card"><h2>&#128196; ILG2 (2023-2026)</h2>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <button class="fbtn active" id="qt-ilg2-usd-btn" onclick="setQtIlg2Mode('usd',this)">USD</button>
+      <button class="fbtn" id="qt-ilg2-units-btn" onclick="setQtIlg2Mode('units',this)">Units</button>
+    </div>
+    <div class="chart-wrap tall"><canvas id="qt_ilg2"></canvas></div>
+  </div>
+  <div class="card"><h2>&#128197; ILG3 (2023-2026)</h2>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <button class="fbtn active" id="qt-ilg3-usd-btn" onclick="setQtIlg3Mode('usd',this)">USD</button>
+      <button class="fbtn" id="qt-ilg3-units-btn" onclick="setQtIlg3Mode('units',this)">Units</button>
+    </div>
+    <div class="chart-wrap tall"><canvas id="qt_ilg3"></canvas></div>
   </div>
 </div>
 <div id="panel-q3country" class="panel">
@@ -345,10 +385,8 @@ const CT26C=[null, 0.66, 0.69, 0.6, 0.68, 0.62, 0.63, 0.59, 0.69, 0.68, 0.67, 0.
 const WK_LABELS=["WK01", "WK02", "WK03", "WK04", "WK05", "WK06", "WK07", "WK08", "WK09", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33", "WK34", "WK35", "WK36", "WK37", "WK38", "WK39", "WK40", "WK41", "WK42", "WK43", "WK44", "WK45", "WK46", "WK47", "WK48", "WK49", "WK50", "WK51", "WK52"],WK_COST=[1.4114, 1.0327, 0.3631, 0.3379, 1.3398, 0.8861, 0.5211, 0.6287, 1.21, 1.0033, 0.9714, 0.4533, 0.1556, 0.9082, 1.2852, 1.1361, 0.4468, 0.6515, 1.1484, 1.1008, 0.263, 0.8358, 1.0006, 1.1731, 1.1602, 0.3506, 0.6453, 1.1671, 1.2953, 1.3057, 0.6563, 0.6934, 0.8532, 0.964, 1.0222, 0.3501, 1.1132, 1.1012, 1.4408, 0.6244, 0.9752, 1.0593, 1.2021, 0.8578, 0.4054, 2.0483, null, null, null, null, null, null],WK_PRICE=[2.5379, 2.1234, 0.6593, 0.5623, 2.4542, 1.7967, 0.831, 0.9853, 2.1835, 1.7937, 2.0862, 0.8226, 0.2235, 1.7187, 2.257, 2.2131, 0.665, 1.1665, 2.0948, 1.8725, 0.4654, 1.479, 2.1154, 2.0041, 2.162, 0.5676, 1.0553, 2.0142, 2.3043, 2.008, 1.1279, 1.1785, 1.6791, 1.7416, 2.2288, 0.7376, 2.0222, 1.9124, 1.8829, 1.1995, 1.9371, 2.3025, 2.0188, 1.7105, 0.8795, 2.75, null, null, null, null, null, null],WK_MKP=[44.38, 51.37, 44.92, 39.9, 45.41, 50.68, 37.29, 36.19, 44.59, 44.06, 53.43, 44.89, 30.38, 47.15, 43.06, 48.67, 32.81, 44.15, 45.18, 41.22, 43.49, 43.49, 52.7, 41.47, 46.34, 38.22, 38.85, 42.06, 43.79, 34.97, 41.81, 41.16, 49.18, 44.65, 54.14, 52.54, 44.95, 42.42, 23.48, 47.95, 49.65, 53.99, 40.45, 49.85, 53.9, 25.52, null, null, null, null, null, null];
 const WK25_COST=[0.9518, 0.8432, 0.7992, 0.7076, 0.5179, 0.9109, 1.0879, 1.1111, 0.8576, 1.1068, 1.1449, 1.1122, 0.3617, 0.6552, 0.897, 0.9376, 0.5508, 0.66, 0.9306, 0.9951, 0.8019, 0.6192, 0.7649, 1.0964, 0.6905, 1.15, 1.1175, 1.46, 0.8719, 0.3218, 1.1758, 1.0768, 1.1225, 0.5865, 0.7281, 1.3003, 1.0119, 0.4513, 0.5602, 1.2379, 1.0716, 1.5103, 0.3271, 0.8636, 1.4696, 1.2694, 0.4808, 0.847, 1.0453, 1.0288, 0.4461, 0.2729],WK25_PRICE=[1.8083, 1.9087, 1.6789, 1.235, 0.8302, 2.0347, 2.3012, 2.1364, 1.8714, 1.9813, 2.0019, 1.8728, 0.6511, 1.3992, 0.9354, 1.7752, 0.9018, 1.2288, 2.0407, 2.0919, 1.7017, 0.9764, 1.5268, 2.2221, 1.3176, 2.5318, 2.3501, 2.1023, 2.1766, 0.5202, 2.4848, 2.1457, 2.343, 1.1687, 1.4309, 2.4575, 2.3312, 0.8497, 0.8908, 2.4574, 2.4534, 2.5802, 0.6588, 1.7012, 2.3876, 2.3661, 0.9483, 1.3871, 2.3314, 1.861, 0.9506, 0.4986],WK25_MKP=[47.37, 55.82, 52.4, 42.71, 37.61, 55.23, 52.73, 47.99, 54.17, 44.14, 42.81, 40.61, 44.44, 53.18, 4.1, 47.18, 38.92, 46.29, 54.4, 52.43, 52.87, 36.58, 49.9, 50.66, 47.59, 54.58, 52.45, 30.55, 59.94, 38.15, 52.68, 49.81, 52.09, 49.81, 49.12, 47.09, 56.59, 46.89, 37.11, 49.63, 56.32, 41.46, 50.35, 49.23, 38.45, 46.35, 49.3, 38.94, 55.16, 44.72, 53.07, 45.26];
 const Q3_DATA={"country": {"labels": ["USA", "CAN", "Others"], "usd": {"2023": [2292807, 219245, 285125], "2024": [1748484, 460177, 346146], "2025": [3399487, 424879, 243806], "2026": [2463432, 443954, 491934]}, "units": {"2023": [1996080, 117209, 120622], "2024": [1425911, 207702, 136140], "2025": [2645433, 134817, 93432], "2026": [1836941, 287314, 237983]}}, "tier": {"labels": ["Off Price", "Dollar/Closeout", "Mass Market", "Wholesale"], "usd": {"2023": [2224619, 380333, 135569, 56429], "2024": [1821569, 289340, 385051, 7879], "2025": [3014020, 487065, 525137, 14344], "2026": [2967551, 297542, 77148, 18157]}, "units": {"2023": [1057852, 962384, 146179, 38323], "2024": [918396, 727608, 71480, 10441], "2025": [1401299, 1239912, 184419, 15536], "2026": [1437049, 756606, 31544, 20843]}}, "brand": {"labels": ["TD+TM", "NA", "OD+OM", "EY"], "usd": {"2023": [1571583, 64838, 210024, 141479], "2024": [1350045, 116860, 274710, 102444], "2025": [1717269, 349417, 692957, 195697], "2026": [1382496, 1319085, 162564, 136702]}, "units": {"2023": [638303, 47855, 346218, 161618], "2024": [551694, 58363, 205529, 210600], "2025": [714554, 211182, 417830, 491870], "2026": [634758, 839003, 155777, 347676]}}, "retailer": {"labels": ["T.J.MAXX", "ROSS", "International", "TJX CA"], "usd": {"2023": [1320395, 137694, 283405, 204101], "2024": [753290, 77451, 337523, 308326], "2025": [1456226, 400049, 243806, 276448], "2026": [920628, 867456, 453041, 431267]}, "units": {"2023": [580374, 72434, 120622, 110288], "2024": [323078, 77176, 136140, 179916], "2025": [599684, 177396, 93432, 123642], "2026": [404745, 374400, 237983, 284710]}}, "category": {"labels": ["Tool", "Skincare", "Hair & Body", "Apparel"], "usd": {"2023": [1857366, 778948, 7409, 18280], "2024": [1408552, 996336, 63885, 0], "2025": [1941754, 1915683, 120047, 0], "2026": [1939306, 1320005, 40430, 16131]}, "units": {"2023": [771013, 1217089, 19417, 6526], "2024": [594236, 1069838, 51864, 18000], "2025": [864428, 1793069, 123198, 38152], "2026": [890495, 1230845, 90823, 51085]}}, "ilg2": {"labels": ["Tool/Bath", "Skincare/Mask", "Tool/Hair", "Skincare/Patch"], "usd": {"2023": [466197, 515891, 1046756, 59299], "2024": [391456, 423834, 686315, 268914], "2025": [890921, 629093, 695184, 758540], "2026": [835594, 667982, 666931, 550524]}, "units": {"2023": [161663, 1109236, 488198, 21792], "2024": [169046, 908027, 310302, 92328], "2025": [407592, 1386958, 333875, 273492], "2026": [385724, 946025, 336027, 226099]}}, "ilg3": {"labels": ["Mask/Sheet Mask", "Patch/Blemish", "Hair/Brush&Comb", "Bath/Scrubber"], "usd": {"2023": [507237, 59299, 455896, 0], "2024": [421697, 256980, 340760, 10301], "2025": [629093, 751729, 492590, 95552], "2026": [656929, 547914, 375515, 290315]}, "units": {"2023": [1100896, 21504, 237558, 0], "2024": [903995, 87552, 162356, 5568], "2025": [1385422, 269730, 241218, 49200], "2026": [917337, 223059, 197443, 125252]}}};
-const QT_DATA={"total_usd": {"Q1": {"2023": 1869289, "2024": 2769893, "2025": 2962186, "2026": 5037346}, "Q2": {"2023": 1839041, "2024": 2098630, "2025": 2904903, "2026": 4036237}, "Q3": {"2023": 2797177, "2024": 2554807, "2025": 4068172, "2026": 3399320}}, "total_units": {"Q1": {"2023": 1787717, "2024": 1933958, "2025": 1934263, "2026": 4854062}, "Q2": {"2023": 1687426, "2024": 1991082, "2025": 2018157, "2026": 3462665}, "Q3": {"2023": 2233911, "2024": 1769753, "2025": 2873682, "2026": 2362238}}, "country": {"labels": ["USA", "CAN", "Others"], "Q1_usd": {"2023": [1576378, 196114, 96797], "2024": [2286989, 337435, 145469], "2025": [2475441, 252946, 233799], "2026": [4430533, 270883, 335930]}, "Q2_usd": {"2023": [1303954, 209334, 325753], "2024": [1648693, 331850, 118087], "2025": [2208278, 372488, 324137], "2026": [3319926, 251197, 465114]}, "Q3_usd": {"2023": [2292807, 219245, 285125], "2024": [1748484, 460177, 346146], "2025": [3399487, 424879, 243806], "2026": [2463432, 443954, 491934]}, "Q1_units": {"2023": [1706687, 81030, 0], "2024": [1827312, 106646, 0], "2025": [1807587, 126674, 2], "2026": [4744896, 108854, 312]}, "Q2_units": {"2023": [1484993, 132810, 69623], "2024": [1829194, 117068, 44820], "2025": [1761967, 132733, 123457], "2026": [3116020, 131004, 215641]}, "Q3_units": {"2023": [1996080, 117209, 120622], "2024": [1425911, 207702, 136140], "2025": [2645433, 134817, 93432], "2026": [1836941, 287314, 237983]}}, "category": {"labels": ["Tool", "Skincare", "Car/Other", "Hair & Body"], "Q1_usd": {"2023": [1125662, 452676, 104677, 159670], "2024": [1786450, 953646, 0, 13234], "2025": [1577205, 1175358, 0, 0], "2026": [2524344, 2157849, 229419, 62312]}, "Q2_usd": {"2023": [977857, 615240, 118563, 26977], "2024": [954148, 982625, 0, 159285], "2025": [1486241, 1192914, 0, 156193], "2026": [1906438, 1727178, 148527, 103843]}, "Q3_usd": {"2023": [1857366, 778948, 0, 7409], "2024": [1408552, 996336, 0, 63885], "2025": [1941754, 1915683, 0, 120047], "2026": [1939306, 1320005, 0, 40430]}, "Q1_units": {"2023": [469654, 468570, 157620, 23839], "2024": [740610, 1161825, 0, 45072], "2025": [733288, 1035142, 0, 155620], "2026": [1202257, 3129277, 509820, 68492]}, "Q2_units": {"2023": [373048, 914035, 186840, 51302], "2024": [391243, 1430808, 0, 126187], "2025": [656075, 1000649, 6800, 137454], "2026": [837690, 2084303, 330060, 101068]}, "Q3_units": {"2023": [771013, 1217089, 0, 19417], "2024": [594236, 1069838, 0, 51864], "2025": [864428, 1793069, 0, 123198], "2026": [890495, 1230845, 0, 90823]}}, "tier": {"labels": ["Off Price", "Dollar/Closeout", "Mass Market", "Wholesale"], "Q1_usd": {"2023": [1493328, 213667, 134979, 0], "2024": [2227214, 187199, 259450, 0], "2025": [2399911, 204395, 230854, 0], "2026": [3466225, 1390170, 63903, 108262]}, "Q2_usd": {"2023": [1115731, 277117, 430624, 11831], "2024": [1414414, 272039, 411909, 267], "2025": [2392692, 213483, 236200, 4902], "2026": [2991256, 825177, 51326, 18586]}, "Q3_usd": {"2023": [2224619, 380333, 135569, 56429], "2024": [1821569, 289340, 385051, 7879], "2025": [3014020, 487065, 525137, 14344], "2026": [2967551, 297542, 77148, 18157]}, "Q1_units": {"2023": [754715, 337140, 42166, 6131], "2024": [1157878, 490524, 266993, 42514], "2025": [1349866, 501612, 68484, 12994], "2026": [1651903, 3245484, 17186, 4280]}, "Q2_units": {"2023": [580754, 647289, 291634, 2425], "2024": [724867, 714840, 511881, 300], "2025": [1236981, 536376, 32803, 2663], "2026": [1425360, 1928136, 25681, 13122]}, "Q3_units": {"2023": [1057852, 962384, 146179, 38323], "2024": [918396, 727608, 71480, 10441], "2025": [1401299, 1239912, 184419, 15536], "2026": [1437049, 756606, 31544, 20843]}}};
+const QT_DATA={"total_usd": {"Q1": {"2023": 1869289, "2024": 2769893, "2025": 2962186, "2026": 5037346}, "Q2": {"2023": 1839041, "2024": 2098630, "2025": 2904903, "2026": 4036237}, "Q3": {"2023": 2797177, "2024": 2554807, "2025": 4068172, "2026": 3399320}}, "total_units": {"Q1": {"2023": 1787717, "2024": 1933958, "2025": 1934263, "2026": 4854062}, "Q2": {"2023": 1687426, "2024": 1991082, "2025": 2018157, "2026": 3462665}, "Q3": {"2023": 2233911, "2024": 1769753, "2025": 2873682, "2026": 2362238}}, "country": {"labels": ["USA", "CAN", "Others"], "Q1_usd": {"2023": [1576378, 196114, 96797], "2024": [2286989, 337435, 145469], "2025": [2475441, 252946, 233799], "2026": [4430533, 270883, 335930]}, "Q2_usd": {"2023": [1303954, 209334, 325753], "2024": [1648693, 331850, 118087], "2025": [2208278, 372488, 324137], "2026": [3319926, 251197, 465114]}, "Q3_usd": {"2023": [2292807, 219245, 285125], "2024": [1748484, 460177, 346146], "2025": [3399487, 424879, 243806], "2026": [2463432, 443954, 491934]}, "Q1_units": {"2023": [1706687, 81030, 0], "2024": [1827312, 106646, 0], "2025": [1807587, 126674, 2], "2026": [4744896, 108854, 312]}, "Q2_units": {"2023": [1484993, 132810, 69623], "2024": [1829194, 117068, 44820], "2025": [1761967, 132733, 123457], "2026": [3116020, 131004, 215641]}, "Q3_units": {"2023": [1996080, 117209, 120622], "2024": [1425911, 207702, 136140], "2025": [2645433, 134817, 93432], "2026": [1836941, 287314, 237983]}}, "category": {"labels": ["Tool", "Skincare", "Car/Other", "Hair & Body"], "Q1_usd": {"2023": [1125662, 452676, 104677, 159670], "2024": [1786450, 953646, 0, 13234], "2025": [1577205, 1175358, 0, 0], "2026": [2524344, 2157849, 229419, 62312]}, "Q2_usd": {"2023": [977857, 615240, 118563, 26977], "2024": [954148, 982625, 0, 159285], "2025": [1486241, 1192914, 0, 156193], "2026": [1906438, 1727178, 148527, 103843]}, "Q3_usd": {"2023": [1857366, 778948, 0, 7409], "2024": [1408552, 996336, 0, 63885], "2025": [1941754, 1915683, 0, 120047], "2026": [1939306, 1320005, 0, 40430]}, "Q1_units": {"2023": [469654, 468570, 157620, 23839], "2024": [740610, 1161825, 0, 45072], "2025": [733288, 1035142, 0, 155620], "2026": [1202257, 3129277, 509820, 68492]}, "Q2_units": {"2023": [373048, 914035, 186840, 51302], "2024": [391243, 1430808, 0, 126187], "2025": [656075, 1000649, 6800, 137454], "2026": [837690, 2084303, 330060, 101068]}, "Q3_units": {"2023": [771013, 1217089, 0, 19417], "2024": [594236, 1069838, 0, 51864], "2025": [864428, 1793069, 0, 123198], "2026": [890495, 1230845, 0, 90823]}}, "tier": {"labels": ["Off Price", "Dollar/Closeout", "Mass Market", "Wholesale"], "Q1_usd": {"2023": [1493328, 213667, 134979, 0], "2024": [2227214, 187199, 259450, 0], "2025": [2399911, 204395, 230854, 0], "2026": [3466225, 1390170, 63903, 108262]}, "Q2_usd": {"2023": [1115731, 277117, 430624, 11831], "2024": [1414414, 272039, 411909, 267], "2025": [2392692, 213483, 236200, 4902], "2026": [2991256, 825177, 51326, 18586]}, "Q3_usd": {"2023": [2224619, 380333, 135569, 56429], "2024": [1821569, 289340, 385051, 7879], "2025": [3014020, 487065, 525137, 14344], "2026": [2967551, 297542, 77148, 18157]}, "Q1_units": {"2023": [754715, 337140, 42166, 6131], "2024": [1157878, 490524, 266993, 42514], "2025": [1349866, 501612, 68484, 12994], "2026": [1651903, 3245484, 17186, 4280]}, "Q2_units": {"2023": [580754, 647289, 291634, 2425], "2024": [724867, 714840, 511881, 300], "2025": [1236981, 536376, 32803, 2663], "2026": [1425360, 1928136, 25681, 13122]}, "Q3_units": {"2023": [1057852, 962384, 146179, 38323], "2024": [918396, 727608, 71480, 10441], "2025": [1401299, 1239912, 184419, 15536], "2026": [1437049, 756606, 31544, 20843]}}, "brand": {"labels": ["TD+TM", "OD+OM", "Others"], "Q1_usd": {"2023": [1037424, 178854, 653011], "2024": [1432582, 451306, 886005], "2025": [1287199, 496983, 1178300], "2026": [2155197, 1053616, 1828534]}, "Q2_usd": {"2023": [806575, 148888, 883579], "2024": [861553, 575617, 661460], "2025": [1428097, 531094, 945711], "2026": [1822155, 814795, 1399289]}, "Q3_usd": {"2023": [1571583, 210024, 1015564], "2024": [1350045, 274710, 930047], "2025": [1717268, 692956, 1657942], "2026": [1382495, 162563, 1854257]}, "Q1_units": {"2023": [436718, 354539, 1036780], "2024": [572238, 513458, 910206], "2025": [567364, 454514, 1011409], "2026": [955255, 1485011, 2549996]}, "Q2_units": {"2023": [0, 0, 0], "2024": [324821, 725186, 941075], "2025": [602331, 346321, 1069505], "2026": [790383, 863747, 1808535]}, "Q3_units": {"2023": [638303, 346218, 1249390], "2024": [551694, 205529, 1012530], "2025": [714554, 417830, 1741298], "2026": [634758, 155777, 1571703]}}, "retailer": {"labels": ["T.J.MAXX", "ROSS", "Int'l", "TJX CA", "Others"], "Q1_usd": {"2023": [860497, 66456, 96797, 104944, 740596], "2024": [1130159, 20990, 145469, 234838, 1238437], "2025": [1012825, 426905, 233784, 198277, 1090691], "2026": [1595579, 657162, 333403, 242025, 2209177]}, "Q2_usd": {"2023": [531802, 57557, 132712, 124016, 992954], "2024": [592475, 94844, 113608, 201699, 1096003], "2025": [979147, 246556, 324131, 221601, 1133469], "2026": [905758, 823595, 465103, 236608, 1605174]}, "Q3_usd": {"2023": [1320394, 137694, 283405, 204100, 851584], "2024": [753290, 77450, 337522, 308326, 1078219], "2025": [1456225, 400049, 243805, 276447, 1691645], "2026": [920628, 867456, 453040, 431266, 726930]}, "Q1_units": {"2023": [357106, 88295, 40320, 69672, 1272644], "2024": [460410, 30718, 61944, 93566, 1349264], "2025": [481368, 236832, 98628, 120782, 1095677], "2026": [653424, 387648, 136200, 105728, 3707262]}, "Q2_units": {"2023": [0, 0, 0, 0, 0], "2024": [247224, 45816, 44240, 97728, 1556074], "2025": [401040, 113724, 123456, 117304, 1262633], "2026": [386312, 389704, 215640, 129504, 2341505]}, "Q3_units": {"2023": [580374, 72434, 118296, 110288, 1352519], "2024": [323078, 77176, 134832, 179916, 1054751], "2025": [599684, 177396, 93432, 123642, 1879528], "2026": [404745, 374400, 216287, 284710, 1082096]}}, "ilg2": {"labels": ["Tool/Bath", "Skin/Mask", "Tool/Hair", "Skin/Patch", "Others"], "Q1_usd": {"2023": [281731, 230025, 614500, 18725, 724307], "2024": [523613, 429267, 907566, 171840, 737606], "2025": [536255, 367305, 636562, 622637, 799725], "2026": [1481115, 967469, 574107, 708273, 1306384]}, "Q2_usd": {"2023": [328442, 413075, 451537, 1841, 644147], "2024": [290292, 577147, 440099, 276184, 514907], "2025": [618457, 332158, 496928, 569287, 888072], "2026": [1051553, 609467, 518895, 686742, 1169582]}, "Q3_usd": {"2023": [466196, 515890, 1046755, 59299, 709031], "2024": [391456, 423834, 686314, 268913, 784286], "2025": [890921, 629092, 695184, 758540, 1094430], "2026": [835594, 667982, 666930, 550524, 678284]}, "Q1_units": {"2023": [115453, 398084, 280703, 6768, 1027029], "2024": [211006, 943614, 404753, 62474, 374055], "2025": [255864, 761162, 324820, 215796, 475645], "2026": [681862, 2029661, 322966, 268414, 1687359]}, "Q2_units": {"2023": [0, 0, 0, 0, 0], "2024": [132232, 1276273, 177054, 99751, 305772], "2025": [274044, 673005, 239557, 201649, 629902], "2026": [455321, 1194015, 250937, 265936, 1296456]}, "Q3_units": {"2023": [161663, 1109236, 488198, 21792, 453022], "2024": [169046, 908027, 310302, 92328, 290050], "2025": [407592, 1386958, 333875, 273492, 471765], "2026": [385724, 946025, 336027, 226099, 468363]}}, "ilg3": {"labels": ["Mask/FSM", "Patch/BP", "Hair/B&C", "Bath/Tools", "Others"], "Q1_usd": {"2023": [212181, 18725, 305390, 41758, 1291234], "2024": [424876, 169361, 259031, 270514, 1646111], "2025": [357099, 605405, 346588, 240502, 1412889], "2026": [950629, 705910, 256284, 602045, 2522478]}, "Q2_usd": {"2023": [384077, 1841, 161863, 114499, 1176761], "2024": [571626, 249754, 178333, 187663, 911253], "2025": [332158, 560719, 233376, 367884, 1410765], "2026": [572890, 681267, 288638, 781571, 1711871]}, "Q3_usd": {"2023": [507236, 59299, 455896, 304434, 1470307], "2024": [421697, 256979, 340759, 240395, 1294972], "2025": [629092, 751728, 492590, 651632, 1543123], "2026": [656929, 547914, 375515, 734912, 1084046]}, "Q1_units": {"2023": [384743, 6768, 148658, 21072, 1266796], "2024": [939376, 61154, 129603, 104640, 761129], "2025": [744152, 207754, 183380, 116400, 781601], "2026": [2021849, 266806, 171958, 281904, 2247745]}, "Q2_units": {"2023": [0, 0, 0, 0, 0], "2024": [1267597, 88615, 86402, 58932, 489536], "2025": [672599, 198145, 115059, 126216, 906138], "2026": [1167783, 262708, 149516, 170000, 1712658]}, "Q3_units": {"2023": [1100896, 21504, 237558, 81726, 792227], "2024": [903995, 87552, 162356, 97777, 518073], "2025": [1385422, 269730, 241218, 257062, 720250], "2026": [917337, 223059, 197443, 307284, 717115]}}};
 var _q3mode='usd';
-var _qt_country_mode='usd';
-var _qt_cat_mode='usd';
 var _qt_charts={};
 
 // Mode switching
@@ -591,38 +629,27 @@ function sortTableP(col){var ths=document.querySelectorAll('#dataTableP thead th
 // ===== QUARTERLY TREND =====
 var QT_YRS=['2023','2024','2025','2026'];
 var QT_CLRS=['#95A5A6','#F39C12','#2471A3','#27AE60'];
+var QT_DIM_CLRS=['#2471A3','#E74C3C','#F39C12','#27AE60','#8E44AD','#1ABC9C'];
 var QT_QTRS=['Q1','Q2','Q3'];
-function buildQtDatasets(key,mode){
+var _qt_dim_modes={};
+function buildQtDatasets(key){
   return QT_YRS.map((yr,i)=>{
     return{label:yr,data:QT_QTRS.map(q=>QT_DATA[key][q][yr]),backgroundColor:QT_CLRS[i],borderRadius:3,borderSkipped:false};
-  });
-}
-function buildQtGroupDatasets(dim,mode){
-  return QT_YRS.map((yr,i)=>{
-    var d=QT_DATA[dim];
-    var data=QT_QTRS.map(q=>{
-      var vals=d[q+'_'+mode][yr];
-      return vals.reduce((a,b)=>a+b,0);
-    });
-    return{label:yr,data:data,backgroundColor:QT_CLRS[i],borderRadius:3,borderSkipped:false};
   });
 }
 function buildQtStackedDatasets(dim,mode){
   var d=QT_DATA[dim];
   var lbls=d.labels;
-  var clrs=['#2471A3','#E74C3C','#F39C12','#27AE60','#8E44AD'];
-  var qtrs=QT_QTRS;
-  // X-axis: Q1_2023, Q1_2024... group by quarter
   var xLabels=[];
-  var datasets=lbls.map((lbl,i)=>{return{label:lbl,data:[],backgroundColor:clrs[i],stack:'s'}});
-  qtrs.forEach(q=>{
+  var datasets=lbls.map((lbl,i)=>{return{label:lbl,data:[],backgroundColor:QT_DIM_CLRS[i%QT_DIM_CLRS.length],stack:'s'}});
+  QT_QTRS.forEach(q=>{
     QT_YRS.forEach(yr=>{
       xLabels.push(q+' '+yr);
-      var vals=d[q+'_'+mode][yr];
+      var vals=d[q+'_'+mode][yr]||[];
       lbls.forEach((_,i)=>datasets[i].data.push(vals[i]||0));
     });
   });
-  return{xLabels,datasets};
+  return{xLabels:xLabels,datasets:datasets};
 }
 function mkQtChart(canvasId,type,labels,datasets,fmtY){
   var c=document.getElementById(canvasId); if(!c)return null;
@@ -635,10 +662,10 @@ function mkQtChart(canvasId,type,labels,datasets,fmtY){
       interaction:{mode:'index',intersect:false},
       plugins:{
         legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:16}},
-        tooltip:{callbacks:{label:c=>fmtY(c.parsed.y)!=null?' '+c.dataset.label+': '+fmtY(c.parsed.y):null}}
+        tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+fmtY(c.parsed.y)}}
       },
       scales:{
-        x:{ticks:{font:{size:10}},grid:{display:false}},
+        x:{ticks:{font:{size:9},maxRotation:45},grid:{display:false}},
         y:{ticks:{callback:v=>fmtY(v),font:{size:9}},grid:{color:'#F0F4F8'}}
       }
     }
@@ -647,43 +674,34 @@ function mkQtChart(canvasId,type,labels,datasets,fmtY){
 }
 function fmtUSD(v){return v>=1e6?'$'+(v/1e6).toFixed(2)+'M':'$'+(v/1e3).toFixed(0)+'K'}
 function fmtU(v){return v>=1e6?(v/1e6).toFixed(2)+'M':(v/1e3).toFixed(0)+'K'}
+function buildQtDimChart(dim,mode){
+  var canvasId='qt_'+(dim==='category'?'cat':dim);
+  var r=buildQtStackedDatasets(dim,mode);
+  mkQtChart(canvasId,'bar',r.xLabels,r.datasets,mode==='usd'?fmtUSD:fmtU);
+}
+function buildQtTotal(mode){
+  var key=mode==='usd'?'total_usd':'total_units';
+  mkQtChart('qt_total','bar',QT_QTRS,buildQtDatasets(key),mode==='usd'?fmtUSD:fmtU);
+}
 function initQTrend(){
-  mkQtChart('qt_usd','bar',QT_QTRS,buildQtDatasets('total_usd','usd'),fmtUSD);
-  mkQtChart('qt_units','bar',QT_QTRS,buildQtDatasets('total_units','units'),fmtU);
-  buildQtCountry(_qt_country_mode);
-  buildQtCat(_qt_cat_mode);
-}
-function buildQtCountry(mode){
-  var d=QT_DATA.country; var lbls=d.labels;
-  var datasets=lbls.map((lbl,i)=>{
-    var clrs=['#2471A3','#27AE60','#E74C3C'];
-    var data=QT_QTRS.map(q=>d[q+'_'+mode]['2026'][i]);
-    return{label:lbl,data:data,backgroundColor:clrs[i],borderRadius:3,borderSkipped:false,stack:'s'};
+  buildQtTotal(_qt_dim_modes.total||'usd');
+  ['country','tier','brand','retailer','category','ilg2','ilg3'].forEach(function(d){
+    buildQtDimChart(d,_qt_dim_modes[d]||'usd');
   });
-  mkQtChart('qt_country','bar',QT_QTRS,datasets,mode==='usd'?fmtUSD:fmtU);
-  // overlay 2025 total as line
 }
-function buildQtCat(mode){
-  var d=QT_DATA.category; var lbls=d.labels;
-  var clrs=['#2471A3','#E74C3C','#F39C12','#27AE60'];
-  var datasets=lbls.map((lbl,i)=>{
-    var data=QT_QTRS.map(q=>d[q+'_'+mode]['2026'][i]);
-    return{label:lbl,data:data,backgroundColor:clrs[i],borderRadius:3,borderSkipped:false,stack:'s'};
-  });
-  mkQtChart('qt_cat','bar',QT_QTRS,datasets,mode==='usd'?fmtUSD:fmtU);
+function mkQtToggle(dim,m,uBtnId,nBtnId){
+  _qt_dim_modes[dim]=m;
+  document.getElementById(uBtnId).classList.toggle('active',m==='usd');
+  document.getElementById(nBtnId).classList.toggle('active',m==='units');
 }
-function setQtCountryMode(m,el){
-  _qt_country_mode=m;
-  document.querySelectorAll('#panel-q3qtrend .fbtn').slice(0,2).forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  buildQtCountry(m);
-}
-function setQtCatMode(m,el){
-  _qt_cat_mode=m;
-  document.querySelectorAll('#panel-q3qtrend .fbtn').slice(2,4).forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  buildQtCat(m);
-}
+function setQtTotalMode(m,el){mkQtToggle('total',m,'qt-total-usd-btn','qt-total-units-btn');buildQtTotal(m);}
+function setQtCountryMode(m,el){mkQtToggle('country',m,'qt-country-usd-btn','qt-country-units-btn');buildQtDimChart('country',m);}
+function setQtTierMode(m,el){mkQtToggle('tier',m,'qt-tier-usd-btn','qt-tier-units-btn');buildQtDimChart('tier',m);}
+function setQtBrandMode(m,el){mkQtToggle('brand',m,'qt-brand-usd-btn','qt-brand-units-btn');buildQtDimChart('brand',m);}
+function setQtRetailerMode(m,el){mkQtToggle('retailer',m,'qt-retailer-usd-btn','qt-retailer-units-btn');buildQtDimChart('retailer',m);}
+function setQtCatMode(m,el){mkQtToggle('category',m,'qt-cat-usd-btn','qt-cat-units-btn');buildQtDimChart('category',m);}
+function setQtIlg2Mode(m,el){mkQtToggle('ilg2',m,'qt-ilg2-usd-btn','qt-ilg2-units-btn');buildQtDimChart('ilg2',m);}
+function setQtIlg3Mode(m,el){mkQtToggle('ilg3',m,'qt-ilg3-usd-btn','qt-ilg3-units-btn');buildQtDimChart('ilg3',m);}
 
 // ===== Q3 REPORT =====
 var _q3charts={};
