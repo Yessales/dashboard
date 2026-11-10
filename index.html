@@ -824,6 +824,135 @@ function exportExcel(){
   XLSX.writeFile(wb,'YesSales_Dashboard_11-09-2026.xlsx');
 }
 </script>
+
+<!-- ===== ASK AI ===== -->
+<button id="ai-fab" onclick="toggleAiPanel()" title="Ask AI" style="position:fixed;bottom:24px;right:24px;z-index:9999;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#2471A3,#1ABC9C);color:#fff;font-size:22px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;">&#129302;</button>
+<div id="ai-panel" style="display:none;position:fixed;bottom:86px;right:16px;z-index:9998;width:380px;max-width:calc(100vw - 32px);background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.18);display:flex;flex-direction:column;overflow:hidden;border:1px solid #E8EEF4;">
+  <div style="background:linear-gradient(135deg,#2471A3,#1ABC9C);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="color:#fff;font-weight:700;font-size:15px;">&#129302; Ask AI — YES SALES Data</span>
+    <button onclick="toggleAiPanel()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;line-height:1;">&#215;</button>
+  </div>
+  <div id="ai-key-setup" style="padding:14px;border-bottom:1px solid #E8EEF4;display:none;">
+    <div style="font-size:12px;color:#666;margin-bottom:6px;">OpenAI API Key (한 번만 입력, 세션 저장)</div>
+    <div style="display:flex;gap:6px;">
+      <input id="ai-key-input" type="password" placeholder="sk-..." style="flex:1;padding:7px 10px;border:1px solid #DDD;border-radius:8px;font-size:12px;">
+      <button onclick="saveAiKey()" style="padding:7px 12px;background:#2471A3;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;">Save</button>
+    </div>
+  </div>
+  <div id="ai-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:200px;max-height:380px;">
+    <div class="ai-msg ai-sys" style="background:#F0F7FF;border-radius:10px;padding:10px 12px;font-size:13px;color:#2471A3;">
+      &#128200; YES SALES 데이터에 대해 질문하세요!<br><small style="color:#888">예: Q3 2026 가장 성장한 카테고리는? / 2026 Q1이 왜 이렇게 높아? / Retailer 별 비중 변화 알려줘</small>
+    </div>
+  </div>
+  <div style="padding:10px 12px;border-top:1px solid #EEE;display:flex;gap:8px;">
+    <input id="ai-input" type="text" placeholder="질문을 입력하세요..." style="flex:1;padding:9px 12px;border:1px solid #DDD;border-radius:10px;font-size:13px;outline:none;" onkeydown="if(event.keyCode===13&&!event.shiftKey){event.preventDefault();sendAiMsg();}">
+    <button onclick="sendAiMsg()" style="padding:9px 14px;background:#2471A3;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:14px;">&#9658;</button>
+  </div>
+</div>
+<style>
+#ai-panel{display:none;}
+#ai-panel.open{display:flex !important;flex-direction:column;}
+.ai-msg{animation:fadeIn 0.2s;}
+.ai-user{background:#2471A3;color:#fff;border-radius:12px 12px 4px 12px;padding:9px 13px;font-size:13px;align-self:flex-end;max-width:85%;word-break:break-word;}
+.ai-bot{background:#F5F7FA;border-radius:12px 12px 12px 4px;padding:9px 13px;font-size:13px;color:#333;max-width:90%;word-break:break-word;line-height:1.5;}
+.ai-err{background:#FFF0F0;border-radius:10px;padding:9px 13px;font-size:12px;color:#C0392B;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+#ai-fab:hover{transform:scale(1.08);transition:transform 0.15s;}
+</style>
+<script>
+var _aiKey=null;
+function toggleAiPanel(){
+  var p=document.getElementById('ai-panel');
+  p.classList.toggle('open');
+  if(p.classList.contains('open')){
+    if(!_aiKey)document.getElementById('ai-key-setup').style.display='block';
+    setTimeout(function(){document.getElementById('ai-input').focus();},100);
+  }
+}
+function saveAiKey(){
+  var k=document.getElementById('ai-key-input').value.trim();
+  if(!k)return;
+  _aiKey=k;
+  document.getElementById('ai-key-setup').style.display='none';
+  document.getElementById('ai-key-input').value='';
+}
+function buildContext(){
+  // Build a compact data summary for AI context
+  var d=QT_DATA;
+  var ctx='YES SALES INC. 대시보드 데이터 요약:\n\n';
+  ctx+='[분기별 Total Sales USD]\n';
+  ['Q1','Q2','Q3'].forEach(function(q){
+    ctx+=q+': ';
+    ['2023','2024','2025','2026'].forEach(function(yr){
+      ctx+=yr+'=$'+(d.total_usd[q][yr]/1e6).toFixed(2)+'M ';
+    });
+    ctx+='\n';
+  });
+  ctx+='\n[분기별 Total Sales Units]\n';
+  ['Q1','Q2','Q3'].forEach(function(q){
+    ctx+=q+': ';
+    ['2023','2024','2025','2026'].forEach(function(yr){
+      ctx+=yr+'='+(d.total_units[q][yr]/1e6).toFixed(2)+'M ';
+    });
+    ctx+='\n';
+  });
+  // Country Q3 2026
+  ctx+='\n[Country - Q3 2026 USD] ';
+  d.country.labels.forEach(function(l,i){ctx+=l+'=$'+(d.country.Q3_usd['2026'][i]/1e3).toFixed(0)+'K ';});
+  ctx+='\n[Tier - Q3 2026 USD] ';
+  d.tier.labels.forEach(function(l,i){ctx+=l+'=$'+(d.tier.Q3_usd['2026'][i]/1e3).toFixed(0)+'K ';});
+  ctx+='\n[Category - Q3 2026 USD] ';
+  d.category.labels.forEach(function(l,i){ctx+=l+'=$'+(d.category.Q3_usd['2026'][i]/1e3).toFixed(0)+'K ';});
+  ctx+='\n[Brand - Q3 2026 USD] ';
+  d.brand.labels.forEach(function(l,i){ctx+=l+'=$'+(d.brand.Q3_usd['2026'][i]/1e3).toFixed(0)+'K ';});
+  ctx+='\n[Retailer - Q3 2026 USD] ';
+  d.retailer.labels.forEach(function(l,i){ctx+=l+'=$'+(d.retailer.Q3_usd['2026'][i]/1e3).toFixed(0)+'K ';});
+  // Q3_DATA extras
+  var q3=Q3_DATA;
+  ctx+='\n[ILG2 - Q3 2026 USD] ';
+  q3.ilg2.labels.forEach(function(l,i){ctx+=l+'=$'+(q3.ilg2.usd['2026'][i]/1e3).toFixed(0)+'K ';});
+  ctx+='\n[ILG3 - Q3 2026 USD] ';
+  q3.ilg3.labels.forEach(function(l,i){ctx+=l+'=$'+(q3.ilg3.usd['2026'][i]/1e3).toFixed(0)+'K ';});
+  return ctx;
+}
+var _aiHistory=[];
+function appendMsg(cls,html){
+  var div=document.createElement('div');
+  div.className='ai-msg '+cls;
+  div.innerHTML=html;
+  document.getElementById('ai-messages').appendChild(div);
+  document.getElementById('ai-messages').scrollTop=99999;
+  return div;
+}
+function sendAiMsg(){
+  if(!_aiKey){document.getElementById('ai-key-setup').style.display='block';return;}
+  var inp=document.getElementById('ai-input');
+  var q=inp.value.trim();
+  if(!q)return;
+  inp.value='';
+  appendMsg('ai-user',q.replace(/</g,'&lt;'));
+  var thinking=appendMsg('ai-bot','<i style="color:#AAA">생각 중...</i>');
+  _aiHistory.push({role:'user',content:q});
+  var messages=[
+    {role:'system',content:'당신은 YES SALES INC.의 판매 데이터 분석 전문가입니다. 아래 데이터를 기반으로 한국어로 간결하고 통찰력 있게 답변하세요.\n\n'+buildContext()},
+  ].concat(_aiHistory.slice(-6));
+  fetch('https://api.openai.com/v1/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+_aiKey},
+    body:JSON.stringify({model:'gpt-4o-mini',messages:messages,max_tokens:600,temperature:0.7})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.error){thinking.className='ai-msg ai-err';thinking.innerHTML='&#9888; '+data.error.message;return;}
+    var ans=data.choices[0].message.content;
+    _aiHistory.push({role:'assistant',content:ans});
+    thinking.className='ai-msg ai-bot';
+    thinking.innerHTML=ans.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  }).catch(function(e){
+    thinking.className='ai-msg ai-err';
+    thinking.innerHTML='&#9888; API 오류: '+e.message;
+  });
+}
+</script>
+
 <script>
 (function(){var P="1103";var PP="CEO1103";function show(pv){document.getElementById('_pw').style.display='none';document.getElementById('_app').style.display='block';if(!pv){document.getElementById('mode-price').style.display='none';document.getElementById('mode-cost').style.display='none';}}if(!P&&!PP){show(true);return;}document.getElementById('_pb').onclick=function(){var val=document.getElementById('_pi').value;if(PP&&val===PP){show(true);}else if(P&&val===P){show(false);}else{document.getElementById('_pe').textContent='Wrong password. Try again.';document.getElementById('_pi').value='';document.getElementById('_pi').focus();}};document.getElementById('_pi').onkeydown=function(e){if(e.keyCode===13)document.getElementById('_pb').click();};})();
 </script>
