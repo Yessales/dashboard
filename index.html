@@ -659,16 +659,17 @@ function mkQtChart(canvasId,type,labels,datasets,fmtY,isGrouped){
     callback:function(val,idx){
       var lbl=this.getLabelForValue(val)||'';
       var p=lbl.split(' ');
-      return idx%3===0?[p[0],p[1]]:p[0];
+      // lbl = "Q1 2023" — Q first, year second
+      return idx%4===0?[p[0],p[1]]:p[1];
     }
   }:{font:{size:10},maxRotation:0};
   var divPlugin=isGrouped?[{afterDraw:function(chart){
     var ctx=chart.ctx,xa=chart.scales.x,ca=chart.chartArea;
-    [2,5,8].forEach(function(i){
+    [3,7].forEach(function(i){
       if(i+1>=labels.length)return;
       var x=(xa.getPixelForValue(i)+xa.getPixelForValue(i+1))/2;
-      ctx.save();ctx.strokeStyle='#BDC3C7';ctx.lineWidth=1;ctx.setLineDash([4,3]);
-      ctx.beginPath();ctx.moveTo(x,ca.top);ctx.lineTo(x,ca.bottom+28);ctx.stroke();ctx.restore();
+      ctx.save();ctx.strokeStyle='#95A5A6';ctx.lineWidth=1.5;ctx.setLineDash([5,3]);
+      ctx.beginPath();ctx.moveTo(x,ca.top-4);ctx.lineTo(x,ca.bottom+32);ctx.stroke();ctx.restore();
     });
   }}]:[];
   _qt_charts[canvasId]=new Chart(c.getContext('2d'),{
