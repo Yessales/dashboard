@@ -4,6 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>YES SALES INC. — Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#EEF2F7;color:#2C3E50}
@@ -67,7 +68,10 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
     <div class="banner-title">YES SALES INC. &nbsp;|&nbsp; Inventory &amp; Sales Dashboard</div>
     <div class="banner-sub">2025 Full Year (WK01-52) &nbsp;vs&nbsp; 2026 YTW (WK01-WK46)</div>
   </div>
-  <div class="badge">11/09/2026</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="badge">11/09/2026</div>
+    <button onclick="exportExcel()" style="padding:6px 16px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;background:#27AE60;color:#fff;border:none">&#11015; Export Excel</button>
+  </div>
 </div>
 
 <!-- ===== MODE BAR ===== -->
@@ -75,6 +79,7 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
   <button class="mode-btn active" id="mode-units" onclick="setMode('units',this)">&#128230; Units</button>
   <button class="mode-btn" id="mode-price" onclick="setMode('price',this)">&#128176; Price (USD)</button>
   <button class="mode-btn" id="mode-cost" onclick="setMode('cost',this)">&#128200; Pricing &amp; Margin Trend</button>
+  <button class="mode-btn" id="mode-q3" onclick="setMode('q3',this)">&#128202; Q3 Report</button>
 </div>
 
 <!-- ===== UNITS SECTION ===== -->
@@ -252,6 +257,51 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </div>
 </div><!-- end pricing-section -->
 
+<!-- ===== Q3 REPORT SECTION ===== -->
+<div id="q3-section" style="display:none">
+<div class="nav">
+  <button class="nav-tab active" onclick="showQ3Panel('q3country',this)">&#127758; Country</button>
+  <button class="nav-tab" onclick="showQ3Panel('q3tier',this)">&#127970; Tier</button>
+  <button class="nav-tab" onclick="showQ3Panel('q3brand',this)">&#127991; Brand</button>
+  <button class="nav-tab" onclick="showQ3Panel('q3retailer',this)">&#128722; Retailer</button>
+  <button class="nav-tab" onclick="showQ3Panel('q3category',this)">&#128230; Category</button>
+</div>
+<div style="padding:14px 24px 0">
+  <div class="kpi-row">
+    <div class="kpi orange"><label>Q3 2026 Total (USD)</label><div class="val" id="q3-kpi-usd26">$3.40M</div><div class="note" id="q3-kpi-usd-yoy">vs 2025: -16.4%</div></div>
+    <div class="kpi orange"><label>Q3 2025 Total (USD)</label><div class="val">$4.07M</div><div class="note">Prior year baseline</div></div>
+    <div class="kpi green"><label>Q3 2026 Total (Units)</label><div class="val" id="q3-kpi-u26">2.36M</div><div class="note" id="q3-kpi-u-yoy">vs 2025: -17.8%</div></div>
+    <div class="kpi green"><label>Q3 2025 Total (Units)</label><div class="val">2.87M</div><div class="note">Prior year baseline</div></div>
+    <div class="kpi blue"><label>Q3 2026 Avg Price/Unit</label><div class="val">$1.44</div><div class="note">USD ÷ Units</div></div>
+    <div class="kpi purple"><label>Report Date</label><div class="val" style="font-size:14px">10/01/2026</div><div class="note">Q3: WK27-WK39</div></div>
+  </div>
+  <div style="display:flex;gap:8px;padding:8px 0 4px">
+    <button class="fbtn active" id="q3m-usd" onclick="setQ3Mode('usd',this)">USD ($)</button>
+    <button class="fbtn" id="q3m-units" onclick="setQ3Mode('units',this)">Units</button>
+  </div>
+</div>
+<div id="panel-q3country" class="panel active">
+  <div class="card"><h2>&#127758; Q3 2026 — Country Breakdown</h2><div class="chart-wrap" style="height:260px"><canvas id="q3c_cur"></canvas></div></div>
+  <div class="card"><h2>&#128202; Country — YoY Comparison (2023-2026)</h2><div class="chart-wrap tall"><canvas id="q3c_yoy"></canvas></div></div>
+</div>
+<div id="panel-q3tier" class="panel">
+  <div class="card"><h2>&#127970; Q3 2026 — Tier Breakdown</h2><div class="chart-wrap" style="height:260px"><canvas id="q3t_cur"></canvas></div></div>
+  <div class="card"><h2>&#128202; Tier — YoY Comparison (2023-2026)</h2><div class="chart-wrap tall"><canvas id="q3t_yoy"></canvas></div></div>
+</div>
+<div id="panel-q3brand" class="panel">
+  <div class="card"><h2>&#127991; Q3 2026 — Brand (Label) Breakdown</h2><div class="chart-wrap" style="height:260px"><canvas id="q3b_cur"></canvas></div></div>
+  <div class="card"><h2>&#128202; Brand — YoY Comparison (2023-2026)</h2><div class="chart-wrap tall"><canvas id="q3b_yoy"></canvas></div></div>
+</div>
+<div id="panel-q3retailer" class="panel">
+  <div class="card"><h2>&#128722; Q3 2026 — Top Retailers</h2><div class="chart-wrap" style="height:260px"><canvas id="q3r_cur"></canvas></div></div>
+  <div class="card"><h2>&#128202; Retailer — YoY Comparison (2023-2026)</h2><div class="chart-wrap tall"><canvas id="q3r_yoy"></canvas></div></div>
+</div>
+<div id="panel-q3category" class="panel">
+  <div class="card"><h2>&#128230; Q3 2026 — Category (ILG1) Breakdown</h2><div class="chart-wrap" style="height:260px"><canvas id="q3cat_cur"></canvas></div></div>
+  <div class="card"><h2>&#128202; Category — YoY Comparison (2023-2026)</h2><div class="chart-wrap tall"><canvas id="q3cat_yoy"></canvas></div></div>
+</div>
+</div><!-- end q3-section -->
+
 <footer>YES SALES INC. Confidential &nbsp;·&nbsp; Updated 11/09/2026</footer>
 <script>
 const LABELS=["WK01", "WK02", "WK03", "WK04", "WK05", "WK06", "WK07", "WK08", "WK09", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33", "WK34", "WK35", "WK36", "WK37", "WK38", "WK39", "WK40", "WK41", "WK42", "WK43", "WK44", "WK45", "WK46", "WK47", "WK48", "WK49", "WK50", "WK51", "WK52"],S25=[126132, 213866, 33007, 199932, 434479, 198512, 102751, 84876, 87070, 145703, 97006, 27923, 240388, 156560, 92816, 60308, 114742, 175574, 85293, 91689, 85088, 297843, 119175, 193504, 239136, 93168, 158182, 97845, 196513, 681340, 133424, 208904, 81835, 312181, 245648, 155126, 154046, 256927, 177043, 50814, 72886, 78558, 436985, 102462, 114063, 68777, 254979, 163780, 64874, 100391, 161829, 228314],S26R=[53349, 130796, 1151761, 647534, 84437, 283415, 464543, 152208, 178461, 241828, 127270, 713143, 1390494, 329029, 169495, 121593, 852401, 214775, 141502, 113579, 359223, 199079, 82122, 119574, 159422, 554926, 155475, 176651, 93703, 93424, 267757, 224203, 78043, 57675, 159921, 618278, 65201, 112550, 120196, 409195, 193129, 94691, 77974, 307249, 566739, 2814, "null", "null", "null", "null", "null", "null"],I25=[2809311, 2589365, 2766340, 2666614, 2327045, 2404149, 2537726, 2642376, 2554388, 2715579, 2901925, 3068442, 2815579, 2839495, 2828793, 2778373, 2702149, 2799675, 2883858, 2787639, 2907426, 2733751, 2660224, 2554715, 2373517, 3145173, 3462182, 3473464, 3409331, 3403203, 3491672, 3510253, 3773388, 4046834, 3865022, 3795836, 3869122, 3696359, 3588279, 3781807, 3708921, 3927963, 3725406, 3826032, 3777865, 3992470, 3737491, 3826567, 3795481, 4105236, 4119031, 4279259],I26R=[4015463, 4948075, 4448719, 4320912, 4580172, 4586760, 4316668, 4348154, 4906953, 5047988, 5368906, 4741053, 4379808, 4288819, 4233816, 4704881, 3974593, 3923498, 4277240, 4253750, 4195331, 4020876, 4147524, 4146660, 4107781, 3552873, 3414280, 3306893, 3483015, 3735348, 3635951, 3536586, 3453293, 3469138, 4046267, 3398405, 3506085, 3497632, 3685372, 3708694, 3671692, 3707771, 3692716, 3686783, 3578364, 3514304, "null", "null", "null", "null", "null", "null"],YOYR=[-57.7, -38.8, 3389.4, 223.9, -80.6, 42.8, 352.1, 79.3, 105.0, 66.0, 31.2, 2454.0, 478.4, 110.2, 82.6, 101.6, 642.9, 22.3, 65.9, 23.9, 322.2, -33.2, -31.1, -38.2, -33.3, 495.6, -1.7, 80.5, -52.3, -86.3, 100.7, 7.3, -4.6, -81.5, -34.9, 298.6, -57.7, -56.2, -32.1, 705.3, 165.0, 20.5, -82.2, 199.9, 396.9, -95.9, "null", "null", "null", "null", "null", "null"],LAST_WK=46;
@@ -265,6 +315,8 @@ const CT25C=[1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1.03, 1
 const CT26C=[null, 0.66, 0.69, 0.6, 0.68, 0.62, 0.63, 0.59, 0.69, 0.68, 0.67, 0.65, 0.63, 0.68, 0.69, 0.67, 0.65, 0.61, 0.67, 0.62, 0.62, 0.61, 0.61, 0.61, 0.62, 0.63, 0.6, 0.77, 0.77, 0.75, 0.65, 0.67, 0.66, 0.66, 0.66, 0.67, 0.64, 0.64, 0.65, 0.66, 0.65, 0.66, 0.66, 0.67, 0.67, 0.66, null, null, null, null, null, null],CT26M=[null, 50.21, 50.3, 50.35, 50.41, 51.15, 50.99, 49.05, 48.79, 48.53, 48.87, 48.29, 47.97, 47.92, 47.62, 48.61, 48.17, 48.77, 47.21, 48.28, 48.44, 48.26, 48.5, 48.99, 47.23, 46.92, 46.69, 49.92, 50.4, 49.93, 44.92, 44.77, 44.84, 44.79, 44.46, 44.47, 44.29, 43.91, 43.73, 43.55, 43.93, 43.48, 43.58, 43.46, 43.61, 43.43, null, null, null, null, null, null],CT26P=[null, 1.49, 1.5, 1.35, 1.48, 1.51, 1.41, 1.31, 1.35, 1.34, 1.33, 1.28, 1.23, 1.32, 1.32, 1.34, 1.26, 1.21, 1.28, 1.22, 1.22, 1.2, 1.22, 1.2, 1.18, 1.18, 1.14, 1.6, 1.59, 1.55, 1.24, 1.21, 1.2, 1.2, 1.2, 1.21, 1.17, 1.16, 1.16, 1.18, 1.18, 1.18, 1.18, 1.2, 1.21, 1.18, null, null, null, null, null, null];
 const WK_LABELS=["WK01", "WK02", "WK03", "WK04", "WK05", "WK06", "WK07", "WK08", "WK09", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33", "WK34", "WK35", "WK36", "WK37", "WK38", "WK39", "WK40", "WK41", "WK42", "WK43", "WK44", "WK45", "WK46", "WK47", "WK48", "WK49", "WK50", "WK51", "WK52"],WK_COST=[1.4114, 1.0327, 0.3631, 0.3379, 1.3398, 0.8861, 0.5211, 0.6287, 1.21, 1.0033, 0.9714, 0.4533, 0.1556, 0.9082, 1.2852, 1.1361, 0.4468, 0.6515, 1.1484, 1.1008, 0.263, 0.8358, 1.0006, 1.1731, 1.1602, 0.3506, 0.6453, 1.1671, 1.2953, 1.3057, 0.6563, 0.6934, 0.8532, 0.964, 1.0222, 0.3501, 1.1132, 1.1012, 1.4408, 0.6244, 0.9752, 1.0593, 1.2021, 0.8578, 0.4054, 2.0483, null, null, null, null, null, null],WK_PRICE=[2.5379, 2.1234, 0.6593, 0.5623, 2.4542, 1.7967, 0.831, 0.9853, 2.1835, 1.7937, 2.0862, 0.8226, 0.2235, 1.7187, 2.257, 2.2131, 0.665, 1.1665, 2.0948, 1.8725, 0.4654, 1.479, 2.1154, 2.0041, 2.162, 0.5676, 1.0553, 2.0142, 2.3043, 2.008, 1.1279, 1.1785, 1.6791, 1.7416, 2.2288, 0.7376, 2.0222, 1.9124, 1.8829, 1.1995, 1.9371, 2.3025, 2.0188, 1.7105, 0.8795, 2.75, null, null, null, null, null, null],WK_MKP=[44.38, 51.37, 44.92, 39.9, 45.41, 50.68, 37.29, 36.19, 44.59, 44.06, 53.43, 44.89, 30.38, 47.15, 43.06, 48.67, 32.81, 44.15, 45.18, 41.22, 43.49, 43.49, 52.7, 41.47, 46.34, 38.22, 38.85, 42.06, 43.79, 34.97, 41.81, 41.16, 49.18, 44.65, 54.14, 52.54, 44.95, 42.42, 23.48, 47.95, 49.65, 53.99, 40.45, 49.85, 53.9, 25.52, null, null, null, null, null, null];
 const WK25_COST=[0.9518, 0.8432, 0.7992, 0.7076, 0.5179, 0.9109, 1.0879, 1.1111, 0.8576, 1.1068, 1.1449, 1.1122, 0.3617, 0.6552, 0.897, 0.9376, 0.5508, 0.66, 0.9306, 0.9951, 0.8019, 0.6192, 0.7649, 1.0964, 0.6905, 1.15, 1.1175, 1.46, 0.8719, 0.3218, 1.1758, 1.0768, 1.1225, 0.5865, 0.7281, 1.3003, 1.0119, 0.4513, 0.5602, 1.2379, 1.0716, 1.5103, 0.3271, 0.8636, 1.4696, 1.2694, 0.4808, 0.847, 1.0453, 1.0288, 0.4461, 0.2729],WK25_PRICE=[1.8083, 1.9087, 1.6789, 1.235, 0.8302, 2.0347, 2.3012, 2.1364, 1.8714, 1.9813, 2.0019, 1.8728, 0.6511, 1.3992, 0.9354, 1.7752, 0.9018, 1.2288, 2.0407, 2.0919, 1.7017, 0.9764, 1.5268, 2.2221, 1.3176, 2.5318, 2.3501, 2.1023, 2.1766, 0.5202, 2.4848, 2.1457, 2.343, 1.1687, 1.4309, 2.4575, 2.3312, 0.8497, 0.8908, 2.4574, 2.4534, 2.5802, 0.6588, 1.7012, 2.3876, 2.3661, 0.9483, 1.3871, 2.3314, 1.861, 0.9506, 0.4986],WK25_MKP=[47.37, 55.82, 52.4, 42.71, 37.61, 55.23, 52.73, 47.99, 54.17, 44.14, 42.81, 40.61, 44.44, 53.18, 4.1, 47.18, 38.92, 46.29, 54.4, 52.43, 52.87, 36.58, 49.9, 50.66, 47.59, 54.58, 52.45, 30.55, 59.94, 38.15, 52.68, 49.81, 52.09, 49.81, 49.12, 47.09, 56.59, 46.89, 37.11, 49.63, 56.32, 41.46, 50.35, 49.23, 38.45, 46.35, 49.3, 38.94, 55.16, 44.72, 53.07, 45.26];
+const Q3_DATA={"country": {"labels": ["USA", "CAN", "Others"], "usd": {"2023": [2292807, 219245, 285125], "2024": [1748484, 460177, 346146], "2025": [3399487, 424879, 243806], "2026": [2463432, 443954, 491934]}, "units": {"2023": [1996080, 117209, 120622], "2024": [1425911, 207702, 136140], "2025": [2645433, 134817, 93432], "2026": [1836941, 287314, 237983]}}, "tier": {"labels": ["Off Price", "Dollar/Closeout", "Mass Market", "Wholesale"], "usd": {"2023": [2224619, 380333, 135569, 56429], "2024": [1821569, 289340, 385051, 7879], "2025": [3014020, 487065, 525137, 14344], "2026": [2967551, 297542, 77148, 18157]}, "units": {"2023": [1057852, 962384, 146179, 38323], "2024": [918396, 727608, 71480, 10441], "2025": [1401299, 1239912, 184419, 15536], "2026": [1437049, 756606, 31544, 20843]}}, "brand": {"labels": ["TD+TM", "NA", "OD+OM", "EY"], "usd": {"2023": [1571583, 64838, 210024, 141479], "2024": [1350045, 116860, 274710, 102444], "2025": [1717269, 349417, 692957, 195697], "2026": [1382496, 1319085, 162564, 136702]}, "units": {"2023": [638303, 47855, 346218, 161618], "2024": [551694, 58363, 205529, 210600], "2025": [714554, 211182, 417830, 491870], "2026": [634758, 839003, 155777, 347676]}}, "retailer": {"labels": ["T.J.MAXX", "ROSS", "International", "TJX CA"], "usd": {"2023": [1320395, 137694, 283405, 204101], "2024": [753290, 77451, 337523, 308326], "2025": [1456226, 400049, 243806, 276448], "2026": [920628, 867456, 453041, 431267]}, "units": {"2023": [580374, 72434, 120622, 110288], "2024": [323078, 77176, 136140, 179916], "2025": [599684, 177396, 93432, 123642], "2026": [404745, 374400, 237983, 284710]}}, "category": {"labels": ["Tool", "Skincare", "Hair & Body", "Apparel"], "usd": {"2023": [1857366, 778948, 7409, 18280], "2024": [1408552, 996336, 63885, 0], "2025": [1941754, 1915683, 120047, 0], "2026": [1939306, 1320005, 40430, 16131]}, "units": {"2023": [771013, 1217089, 19417, 6526], "2024": [594236, 1069838, 51864, 18000], "2025": [864428, 1793069, 123198, 38152], "2026": [890495, 1230845, 90823, 51085]}}};
+var _q3mode='usd';
 
 // Mode switching
 function setMode(mode,el){
@@ -273,7 +325,9 @@ function setMode(mode,el){
   document.getElementById('units-section').style.display=mode==='units'?'block':'none';
   document.getElementById('price-section').style.display=mode==='price'?'block':'none';
   document.getElementById('pricing-section').style.display=mode==='cost'?'block':'none';
+  document.getElementById('q3-section').style.display=mode==='q3'?'block':'none';
   if(mode==='cost'&&!window._cti){initPricingTrend();window._cti=true;}
+  if(mode==='q3'&&!window._q3i){initQ3('country');window._q3i=true;}
 }
 
 // Units panel switching
@@ -500,6 +554,124 @@ function buildTableP(){
 function filterTableP(){curSearchP=document.getElementById('searchBoxP').value;buildTableP()}
 function setFilterP(f,el){curFilterP=f;document.querySelectorAll('#panel-ptable .fbtn').forEach(b=>b.classList.remove('active'));el.classList.add('active');buildTableP()}
 function sortTableP(col){var ths=document.querySelectorAll('#dataTableP thead th');ths.forEach(th=>th.classList.remove('sort-asc','sort-desc'));sortDirP=(sortColP===col)?sortDirP*-1:1;sortColP=col;ths[col].classList.add(sortDirP===1?'sort-asc':'sort-desc');buildTableP()}
+
+// ===== Q3 REPORT =====
+var _q3charts={};
+var _q3cur_panel='q3country';
+function showQ3Panel(id,el){
+  document.querySelectorAll('#q3-section .panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#q3-section .nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  el.classList.add('active');
+  _q3cur_panel=id;
+  var dim=id.replace('q3','');
+  if(!_q3charts[dim]){initQ3(dim);}
+}
+function setQ3Mode(m,el){
+  _q3mode=m;
+  document.querySelectorAll('#q3-section .fbtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  // Destroy all Q3 charts and re-init current panel
+  Object.values(_q3charts).forEach(c=>{if(c&&c.destroy){c.destroy();}});
+  _q3charts={};
+  var dim=_q3cur_panel.replace('q3','');
+  initQ3(dim);
+}
+function q3Fmt(v){return _q3mode==='usd'?'$'+(v/1e6).toFixed(2)+'M':(v/1e3).toFixed(1)+'K';}
+var Q3_COLORS=['#2471A3','#27AE60','#F39C12','#E74C3C'];
+var Q3_YR=['2023','2024','2025','2026'];
+function initQ3(dim){
+  var dimKey=dim==='country'?'country':dim==='tier'?'tier':dim==='brand'?'brand':dim==='retailer'?'retailer':'category';
+  var d=Q3_DATA[dimKey];
+  var lbls=d.labels;
+  var vals2026=d[_q3mode]['2026'];
+  // Current Q3 2026 horizontal bar
+  var c1=document.getElementById('q3'+dim.charAt(0)+'_cur');
+  if(!c1)return;
+  var ctx1=c1.getContext('2d');
+  if(_q3charts[dim+'_cur'])_q3charts[dim+'_cur'].destroy();
+  _q3charts[dim+'_cur']=new Chart(ctx1,{
+    type:'bar',
+    data:{labels:lbls,datasets:[{
+      label:'Q3 2026',data:vals2026,
+      backgroundColor:Q3_COLORS.slice(0,lbls.length),
+      borderRadius:5,borderSkipped:false
+    }]},
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>_q3mode==='usd'?' $'+c.parsed.x.toLocaleString():' '+c.parsed.x.toLocaleString()+' units'}}},
+      scales:{
+        x:{ticks:{callback:v=>q3Fmt(v),font:{size:9}},grid:{color:'#F0F4F8'}},
+        y:{ticks:{font:{size:11}},grid:{display:false}}
+      }
+    }
+  });
+  // YoY grouped bar
+  var c2=document.getElementById('q3'+dim.charAt(0)+'_yoy');
+  if(!c2)return;
+  var ctx2=c2.getContext('2d');
+  if(_q3charts[dim+'_yoy'])_q3charts[dim+'_yoy'].destroy();
+  var yoyDatasets=Q3_YR.map((yr,i)=>{
+    return{label:yr,data:d[_q3mode][yr],backgroundColor:Q3_COLORS[i],borderRadius:3,borderSkipped:false};
+  });
+  _q3charts[dim+'_yoy']=new Chart(ctx2,{
+    type:'bar',
+    data:{labels:lbls,datasets:yoyDatasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:16}},
+        tooltip:{callbacks:{label:c=>_q3mode==='usd'?' '+c.dataset.label+': $'+c.parsed.y.toLocaleString():' '+c.dataset.label+': '+c.parsed.y.toLocaleString()}}
+      },
+      scales:{
+        x:{ticks:{font:{size:10}},grid:{display:false}},
+        y:{ticks:{callback:v=>q3Fmt(v),font:{size:9}},grid:{color:'#F0F4F8'}}
+      }
+    }
+  });
+}
+
+// ===== EXCEL EXPORT =====
+function exportExcel(){
+  var wb=XLSX.utils.book_new();
+  // Sheet 1: Weekly Units
+  var ws1Data=[['Week','2025 Sales (Units)','2026 Sales (Units)','YoY %','2025 Inventory','2026 Inventory']];
+  LABELS.forEach((lbl,i)=>{
+    ws1Data.push([lbl,S25[i],S26[i]!==null?S26[i]:'',YOYP[i]!==null?YOYP[i]+'%':'',I25[i],I26[i]!==null?I26[i]:'']);
+  });
+  var ws1=XLSX.utils.aoa_to_sheet(ws1Data);
+  ws1['!cols']=[{wch:8},{wch:18},{wch:18},{wch:10},{wch:18},{wch:18}];
+  XLSX.utils.book_append_sheet(wb,ws1,'Weekly Units');
+  // Sheet 2: Weekly USD
+  var ws2Data=[['Week','2025 Sales (USD)','2026 Sales (USD)','YoY %']];
+  LABELS.forEach((lbl,i)=>{
+    ws2Data.push([lbl,SU25[i],SU26[i]!==null?SU26[i]:'',YOYUP[i]!==null?YOYUP[i]+'%':'']);
+  });
+  var ws2=XLSX.utils.aoa_to_sheet(ws2Data);
+  ws2['!cols']=[{wch:8},{wch:18},{wch:18},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Weekly USD');
+  // Sheet 3: Price History
+  var ws3Data=[['Date','Avg Cost','Avg Price','Markup%']];
+  COST_HISTORY.forEach(r=>{ws3Data.push([r.date,r.avgCost,r.avgPrice!=null?r.avgPrice:'',(r.markupPct*100).toFixed(2)+'%']);});
+  var ws3=XLSX.utils.aoa_to_sheet(ws3Data);
+  ws3['!cols']=[{wch:12},{wch:12},{wch:12},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,ws3,'Price History');
+  // Sheet 4: Q3 2026 Breakdown
+  var ws4Data=[['Dimension','Category','USD 2023','USD 2024','USD 2025','USD 2026','Units 2023','Units 2024','Units 2025','Units 2026']];
+  ['country','tier','brand','retailer','category'].forEach(dim=>{
+    var d=Q3_DATA[dim];
+    d.labels.forEach((lbl,i)=>{
+      ws4Data.push([dim.charAt(0).toUpperCase()+dim.slice(1),lbl,
+        d.usd['2023'][i],d.usd['2024'][i],d.usd['2025'][i],d.usd['2026'][i],
+        d.units['2023'][i],d.units['2024'][i],d.units['2025'][i],d.units['2026'][i]]);
+    });
+  });
+  var ws4=XLSX.utils.aoa_to_sheet(ws4Data);
+  ws4['!cols']=[{wch:12},{wch:22},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,ws4,'Q3 2026 Breakdown');
+  XLSX.writeFile(wb,'YesSales_Dashboard_11-09-2026.xlsx');
+}
 </script>
 <script>
 (function(){var P="1103";var PP="CEO1103";function show(pv){document.getElementById('_pw').style.display='none';document.getElementById('_app').style.display='block';if(!pv){document.getElementById('mode-price').style.display='none';document.getElementById('mode-cost').style.display='none';}}if(!P&&!PP){show(true);return;}document.getElementById('_pb').onclick=function(){var val=document.getElementById('_pi').value;if(PP&&val===PP){show(true);}else if(P&&val===P){show(false);}else{document.getElementById('_pe').textContent='Wrong password. Try again.';document.getElementById('_pi').value='';document.getElementById('_pi').focus();}};document.getElementById('_pi').onkeydown=function(e){if(e.keyCode===13)document.getElementById('_pb').click();};})();
