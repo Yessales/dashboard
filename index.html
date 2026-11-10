@@ -582,11 +582,12 @@ var Q3_COLORS=['#2471A3','#27AE60','#F39C12','#E74C3C'];
 var Q3_YR=['2023','2024','2025','2026'];
 function initQ3(dim){
   var dimKey=dim==='country'?'country':dim==='tier'?'tier':dim==='brand'?'brand':dim==='retailer'?'retailer':'category';
+  var dimId={country:'c',tier:'t',brand:'b',retailer:'r',category:'cat'}[dim];
   var d=Q3_DATA[dimKey];
   var lbls=d.labels;
   var vals2026=d[_q3mode]['2026'];
   // Current Q3 2026 horizontal bar
-  var c1=document.getElementById('q3'+dim.charAt(0)+'_cur');
+  var c1=document.getElementById('q3'+dimId+'_cur');
   if(!c1)return;
   var ctx1=c1.getContext('2d');
   if(_q3charts[dim+'_cur'])_q3charts[dim+'_cur'].destroy();
@@ -607,7 +608,7 @@ function initQ3(dim){
     }
   });
   // YoY grouped bar
-  var c2=document.getElementById('q3'+dim.charAt(0)+'_yoy');
+  var c2=document.getElementById('q3'+dimId+'_yoy');
   if(!c2)return;
   var ctx2=c2.getContext('2d');
   if(_q3charts[dim+'_yoy'])_q3charts[dim+'_yoy'].destroy();
