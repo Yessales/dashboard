@@ -100,12 +100,12 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </div>
 <div id="panel-summary" class="panel active">
   <div class="kpi-row">
-    <div class="kpi orange"><label>2023 Annual Sales</label><div class="val">0.84M</div><div class="note">843,463 units</div></div>
-    <div class="kpi orange"><label>2024 Annual Sales</label><div class="val">7.29M</div><div class="note">7,291,641 units &nbsp;|&nbsp; YoY +764.5%</div></div>
-    <div class="kpi"><label>2025 Full Year Sales</label><div class="val">8.55M</div><div class="note">8,554,267 units (WK01-52)</div></div>
-    <div class="kpi green"><label>2026 YTW (WK01-46)</label><div class="val">12.91M</div><div class="note">12,910,827 units</div></div>
-    <div class="kpi red"><label>2025 WK52 Inventory</label><div class="val">4.28M</div><div class="note">4,279,259 units</div></div>
-    <div class="kpi purple"><label>2026 WK46 Inventory</label><div class="val">3.51M</div><div class="note">3,514,304 units</div></div>
+    <div class="kpi orange"><span class="yr-badge yr-prev">2023</span><label>Annual Sales</label><div class="val">0.84M</div><div class="note">843,463 units</div></div>
+    <div class="kpi orange"><span class="yr-badge yr-prev">2024</span><label>Annual Sales</label><div class="val">7.29M</div><div class="note">7,291,641 units &nbsp;|&nbsp; YoY +764.5%</div></div>
+    <div class="kpi"><span class="yr-badge yr-prev">2025</span><label>Full Year Sales</label><div class="val">8.55M</div><div class="note">8,554,267 units (WK01-52)</div></div>
+    <div class="kpi green cur-yr"><span class="yr-badge yr-cur">2026</span><label>YTW (WK01-46)</label><div class="val">12.91M</div><div class="note">12,910,827 units</div></div>
+    <div class="kpi red"><span class="yr-badge yr-prev">2025</span><label>WK52 Inventory</label><div class="val">4.28M</div><div class="note">4,279,259 units</div></div>
+    <div class="kpi purple cur-yr"><span class="yr-badge yr-cur">2026</span><label>WK46 Inventory</label><div class="val">3.51M</div><div class="note">3,514,304 units</div></div>
   </div>
   <div class="card"><h2>&#128197; Annual Sales Summary — Units (2023-2026)</h2><div class="chart-wrap" style="height:260px"><canvas id="annualChart"></canvas></div></div>
 </div>
@@ -163,10 +163,10 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </div>
 <div id="panel-psummary" class="panel active">
   <div class="kpi-row">
-    <div class="kpi orange"><label>2023 Annual Sales</label><div class="val">$1.00M</div><div class="note">997,276</div></div>
-    <div class="kpi orange"><label>2024 Annual Sales</label><div class="val">$9.63M</div><div class="note">9,629,061 &nbsp;|&nbsp; YoY +865.5%</div></div>
-    <div class="kpi"><label>2025 Full Year Sales</label><div class="val">$12.31M</div><div class="note">$12,314,388 (WK01-52)</div></div>
-    <div class="kpi green"><label>2026 YTW (WK01-46)</label><div class="val">$14.23M</div><div class="note">$14,232,627</div></div>
+    <div class="kpi orange"><span class="yr-badge yr-prev">2023</span><label>Annual Sales</label><div class="val">$1.00M</div><div class="note">997,276</div></div>
+    <div class="kpi orange"><span class="yr-badge yr-prev">2024</span><label>Annual Sales</label><div class="val">$9.63M</div><div class="note">9,629,061 &nbsp;|&nbsp; YoY +865.5%</div></div>
+    <div class="kpi"><span class="yr-badge yr-prev">2025</span><label>Full Year Sales</label><div class="val">$12.31M</div><div class="note">$12,314,388 (WK01-52)</div></div>
+    <div class="kpi green cur-yr"><span class="yr-badge yr-cur">2026</span><label>YTW (WK01-46)</label><div class="val">$14.23M</div><div class="note">$14,232,627</div></div>
   </div>
   <div class="card"><h2>&#128197; Annual Sales Summary — USD (2023-2026)</h2><div class="chart-wrap" style="height:260px"><canvas id="annualChartUSD"></canvas></div></div>
 </div>
@@ -221,11 +221,11 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </div>
 <div id="panel-ptmain" class="panel active" style="padding-top:16px">
   <div class="kpi-row">
-    <div class="kpi"><label>Latest Avg Cost</label><div class="val" id="ct-cur-cost">-</div><div class="note" id="ct-cur-date">-</div></div>
-    <div class="kpi blue"><label>Latest Avg Price</label><div class="val" id="ct-cur-price">-</div><div class="note">Sales-weighted avg price</div></div>
-    <div class="kpi purple"><label>Latest Markup%</label><div class="val" id="ct-cur-markup">-</div><div class="note">Inventory markup rate</div></div>
-    <div class="kpi orange"><label>Avg Cost (2026 avg)</label><div class="val" id="ct-avg-cost">-</div><div class="note">2026 weekly average</div></div>
-    <div class="kpi green"><label>Avg Price (2026 avg)</label><div class="val" id="ct-avg-price">-</div><div class="note">2026 weekly average</div></div>
+    <div class="kpi cur-yr"><span class="yr-badge yr-cur">2026</span><label>Latest Avg Cost</label><div class="val" id="ct-cur-cost">-</div><div class="note" id="ct-cur-date">-</div></div>
+    <div class="kpi blue cur-yr"><span class="yr-badge yr-cur">2026</span><label>Latest Avg Price</label><div class="val" id="ct-cur-price">-</div><div class="note">Sales-weighted avg price</div></div>
+    <div class="kpi purple cur-yr"><span class="yr-badge yr-cur">2026</span><label>Latest Markup%</label><div class="val" id="ct-cur-markup">-</div><div class="note">Inventory markup rate</div></div>
+    <div class="kpi orange cur-yr"><span class="yr-badge yr-cur">2026</span><label>Avg Cost (annual avg)</label><div class="val" id="ct-avg-cost">-</div><div class="note">2026 weekly average</div></div>
+    <div class="kpi green cur-yr"><span class="yr-badge yr-cur">2026</span><label>Avg Price (annual avg)</label><div class="val" id="ct-avg-price">-</div><div class="note">2026 weekly average</div></div>
     <div class="kpi red"><label>Avg Markup% (2026)</label><div class="val" id="ct-avg-markup">-</div><div class="note">2026 weekly average</div></div>
   </div>
   <div class="card">
@@ -243,12 +243,12 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </div>
 <div id="panel-ptwmain" class="panel" style="padding-top:16px">
   <div class="kpi-row">
-    <div class="kpi orange"><label>2025 Avg Cost</label><div class="val" id="ctw-avg-cost25">-</div><div class="note">2025 weekly average</div></div>
-    <div class="kpi green"><label>2025 Avg Price</label><div class="val" id="ctw-avg-price25">-</div><div class="note">2025 weekly average</div></div>
-    <div class="kpi" style="border-left:4px solid #F0B27A"><label>2025 Avg Markup%</label><div class="val" id="ctw-avg-markup25">-</div><div class="note">2025 weekly average</div></div>
-    <div class="kpi"><label>2026 Avg Cost</label><div class="val" id="ctw-avg-cost">-</div><div class="note" id="ctw-cur-wk">-</div></div>
-    <div class="kpi blue"><label>2026 Avg Price</label><div class="val" id="ctw-avg-price">-</div><div class="note">2026 weekly average</div></div>
-    <div class="kpi purple"><label>2026 Avg Markup%</label><div class="val" id="ctw-avg-markup">-</div><div class="note">2026 weekly average</div></div>
+    <div class="kpi orange"><span class="yr-badge yr-prev">2025</span><label>Avg Cost</label><div class="val" id="ctw-avg-cost25">-</div><div class="note">2025 weekly average</div></div>
+    <div class="kpi green"><span class="yr-badge yr-prev">2025</span><label>Avg Price</label><div class="val" id="ctw-avg-price25">-</div><div class="note">2025 weekly average</div></div>
+    <div class="kpi" style="border-left:4px solid #F0B27A"><span class="yr-badge yr-prev">2025</span><label>Avg Markup%</label><div class="val" id="ctw-avg-markup25">-</div><div class="note">2025 weekly average</div></div>
+    <div class="kpi cur-yr"><span class="yr-badge yr-cur">2026</span><label>Avg Cost</label><div class="val" id="ctw-avg-cost">-</div><div class="note" id="ctw-cur-wk">-</div></div>
+    <div class="kpi blue cur-yr"><span class="yr-badge yr-cur">2026</span><label>Avg Price</label><div class="val" id="ctw-avg-price">-</div><div class="note">2026 weekly average</div></div>
+    <div class="kpi purple cur-yr"><span class="yr-badge yr-cur">2026</span><label>Avg Markup%</label><div class="val" id="ctw-avg-markup">-</div><div class="note">2026 weekly average</div></div>
   </div>
   <div class="card">
     <h2>&#128197; Weekly Avg Cost, Price &amp; Markup% (2025 vs 2026 by Week)</h2>
