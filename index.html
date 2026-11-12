@@ -22,9 +22,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#EDF1F7;color:#1E2D3
 .nav-tab.active{background:#fff;color:#0D1B2A;box-shadow:0 -3px 8px rgba(0,0,0,.08);font-weight:700}
 .panel{display:none;padding:0 28px 32px;background:#EDF1F7}.panel.active{display:block}
 .kpi-row{display:flex;gap:14px;padding:20px 0 6px;flex-wrap:wrap}
-.kpi{background:#fff;border-radius:12px;padding:16px 20px;flex:1;min-width:140px;box-shadow:0 2px 12px rgba(30,45,61,.07);border-left:4px solid #2471A3;transition:box-shadow .2s}
+.kpi{background:#fff;border-radius:12px;padding:14px 18px;flex:1;min-width:140px;box-shadow:0 2px 12px rgba(30,45,61,.07);border-left:4px solid #2471A3;transition:box-shadow .2s}
 .kpi:hover{box-shadow:0 4px 20px rgba(30,45,61,.12)}
 .kpi.orange{border-left-color:#E8703A}.kpi.green{border-left-color:#27AE60}.kpi.red{border-left-color:#E74C3C}.kpi.purple{border-left-color:#8E44AD}.kpi.blue{border-left-color:#1A6FA8}
+.kpi.cur-yr{background:linear-gradient(135deg,#EBF4FC 0%,#F5F9FF 100%);border-left-width:5px;box-shadow:0 3px 14px rgba(26,111,168,.13)}
+.kpi.cur-yr:hover{box-shadow:0 5px 22px rgba(26,111,168,.2)}
+.yr-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:5px;letter-spacing:.4px}
+.yr-cur{background:#1A6FA8;color:#fff}
+.yr-prev{background:#E8EEF4;color:#8899A6}
 .kpi label{font-size:9px;color:#7F8C8D;text-transform:uppercase;letter-spacing:.7px;font-weight:600}
 .kpi .val{font-size:22px;font-weight:700;margin-top:4px;color:#0D1B2A}.kpi .note{font-size:9px;color:#95A5A6;margin-top:3px}
 .card{background:#fff;border-radius:14px;margin-top:18px;padding:22px 24px;box-shadow:0 2px 16px rgba(30,45,61,.07);border:1px solid rgba(30,45,61,.05)}
@@ -274,11 +279,11 @@ footer{text-align:center;font-size:10px;color:#BDC3C7;padding:14px}
 </div>
 <div style="padding:14px 24px 0">
   <div class="kpi-row">
-    <div class="kpi orange"><label id="q3-lbl-usd26">YTD 2026 Total (USD)</label><div class="val" id="q3-kpi-usd26">$12.47M</div><div class="note" id="q3-kpi-usd-yoy">vs 2025: +25.5%</div></div>
-    <div class="kpi orange"><label id="q3-lbl-usd25">YTD 2025 Total (USD)</label><div class="val" id="q3-kpi-usd25">$9.94M</div><div class="note">Prior year baseline</div></div>
-    <div class="kpi green"><label id="q3-lbl-u26">YTD 2026 Total (Units)</label><div class="val" id="q3-kpi-u26">10.68M</div><div class="note" id="q3-kpi-u-yoy">vs 2025: +56.4%</div></div>
-    <div class="kpi green"><label id="q3-lbl-u25">YTD 2025 Total (Units)</label><div class="val" id="q3-kpi-u25">6.83M</div><div class="note">Prior year baseline</div></div>
-    <div class="kpi blue"><label id="q3-lbl-avg">YTD 2026 Avg Price/Unit</label><div class="val" id="q3-kpi-avg">$1.17</div><div class="note">USD ÷ Units</div></div>
+    <div class="kpi orange cur-yr"><span class="yr-badge yr-cur">2026</span><label id="q3-lbl-usd26">YTD Total (USD)</label><div class="val" id="q3-kpi-usd26">$12.47M</div><div class="note" id="q3-kpi-usd-yoy">vs 2025: +25.5%</div></div>
+    <div class="kpi orange"><span class="yr-badge yr-prev">2025</span><label id="q3-lbl-usd25">YTD Total (USD)</label><div class="val" id="q3-kpi-usd25">$9.94M</div><div class="note">Prior year baseline</div></div>
+    <div class="kpi green cur-yr"><span class="yr-badge yr-cur">2026</span><label id="q3-lbl-u26">YTD Total (Units)</label><div class="val" id="q3-kpi-u26">10.68M</div><div class="note" id="q3-kpi-u-yoy">vs 2025: +56.4%</div></div>
+    <div class="kpi green"><span class="yr-badge yr-prev">2025</span><label id="q3-lbl-u25">YTD Total (Units)</label><div class="val" id="q3-kpi-u25">6.83M</div><div class="note">Prior year baseline</div></div>
+    <div class="kpi blue cur-yr"><span class="yr-badge yr-cur">2026</span><label id="q3-lbl-avg">YTD Avg Price/Unit</label><div class="val" id="q3-kpi-avg">$1.17</div><div class="note">USD ÷ Units</div></div>
     <div class="kpi purple"><label>Report Date</label><div class="val" style="font-size:14px">10/01/2026</div><div class="note">Q3: WK27-WK39</div></div>
   </div>
   <div style="display:flex;gap:8px;padding:8px 0 4px;align-items:center;flex-wrap:wrap">
@@ -777,11 +782,11 @@ function updateQ3KPIs(){
   var pfx=_q3period==='ytd'?'YTD':'Q3';
   function fD(v){return '$'+(v/1e6).toFixed(2)+'M';}
   function fU(v){return (v/1e6).toFixed(2)+'M';}
-  document.getElementById('q3-lbl-usd26').textContent=pfx+' 2026 Total (USD)';
-  document.getElementById('q3-lbl-usd25').textContent=pfx+' 2025 Total (USD)';
-  document.getElementById('q3-lbl-u26').textContent=pfx+' 2026 Total (Units)';
-  document.getElementById('q3-lbl-u25').textContent=pfx+' 2025 Total (Units)';
-  document.getElementById('q3-lbl-avg').textContent=pfx+' 2026 Avg Price/Unit';
+  document.getElementById('q3-lbl-usd26').textContent=pfx+' Total (USD)';
+  document.getElementById('q3-lbl-usd25').textContent=pfx+' Total (USD)';
+  document.getElementById('q3-lbl-u26').textContent=pfx+' Total (Units)';
+  document.getElementById('q3-lbl-u25').textContent=pfx+' Total (Units)';
+  document.getElementById('q3-lbl-avg').textContent=pfx+' Avg Price/Unit';
   document.getElementById('q3-kpi-usd26').textContent=fD(kpi.usd26);
   document.getElementById('q3-kpi-usd25').textContent=fD(kpi.usd25);
   document.getElementById('q3-kpi-u26').textContent=fU(kpi.u26);
